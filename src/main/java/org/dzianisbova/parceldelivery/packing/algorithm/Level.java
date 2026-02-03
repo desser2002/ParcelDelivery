@@ -1,5 +1,6 @@
 package org.dzianisbova.parceldelivery.packing.algorithm;
 
+import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.packing.model.ParcelPlacement;
@@ -8,6 +9,7 @@ import org.dzianisbova.parceldelivery.packing.model.Position;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Level {
     private final double startHeight;
     private final Dimensions containerBounds;
