@@ -1,10 +1,10 @@
-package org.dzianisbova.parceldelivery.packing.algorithm;
+package org.dzianisbova.parceldelivery.packing.domain.algorithm;
 
 import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
-import org.dzianisbova.parceldelivery.packing.model.ParcelPlacement;
-import org.dzianisbova.parceldelivery.packing.model.Position;
+import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
+import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class Level {
         return findLowestAvailablePosition(parcel) != null;
     }
 
-    private Position findLowestAvailablePosition(Parcel parcel) {
+    public Position findLowestAvailablePosition(Parcel parcel) {
         Dimensions parcelDimensions = parcel.getDimensions();
         Position lowestPos = null;
         double minHeight = Double.MAX_VALUE;
@@ -81,6 +81,19 @@ public class Level {
         return placement;
     }
 
+    public ParcelPlacement placeParcelAt(Parcel parcel, Position position) {
+        if (!canPlaceAt(position, parcel.getDimensions())) {
+            throw new IllegalStateException("Cannot place parcel at position " + position);
+        }
+
+        ParcelPlacement placement = new ParcelPlacement(parcel, position);
+        placements.add(placement);
+        height = Math.max(height, parcel.getDimensions().height());
+        updateExtremePoints(placement);
+
+        return placement;
+    }
+
     private void updateExtremePoints(ParcelPlacement placement) {
         Position position = placement.getPosition();
         Dimensions dimensions = placement.getParcel().getDimensions();
@@ -110,11 +123,6 @@ public class Level {
         Position extremeY = new Position(pos.x(), pos.y() + dim.width(), pos.z());
         if (extremeY.y() < containerBounds.width()) {
             newPoints.add(extremeY);
-        }
-
-        Position extremeZ = new Position(pos.x(), pos.y(), pos.z() + dim.height());
-        if (extremeZ.z() < containerBounds.height()) {
-            newPoints.add(extremeZ);
         }
 
         return newPoints;

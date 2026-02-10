@@ -1,4 +1,4 @@
-package org.dzianisbova.parceldelivery.packing.model;
+package org.dzianisbova.parceldelivery.packing.domain.model;
 
 import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;

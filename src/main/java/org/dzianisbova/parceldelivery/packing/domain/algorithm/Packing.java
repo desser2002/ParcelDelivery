@@ -1,10 +1,10 @@
-package org.dzianisbova.parceldelivery.packing.algorithm;
+package org.dzianisbova.parceldelivery.packing.domain.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
-import org.dzianisbova.parceldelivery.packing.model.ParcelPlacement;
-import org.dzianisbova.parceldelivery.packing.model.VehiclePackingResult;
+import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
+import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
 
 import java.util.ArrayList;
 import java.util.Comparator;

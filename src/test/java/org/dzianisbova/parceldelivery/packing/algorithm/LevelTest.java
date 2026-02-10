@@ -2,6 +2,7 @@ package org.dzianisbova.parceldelivery.packing.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
+import org.dzianisbova.parceldelivery.packing.domain.algorithm.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
