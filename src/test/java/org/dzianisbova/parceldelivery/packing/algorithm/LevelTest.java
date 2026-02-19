@@ -2,6 +2,8 @@ package org.dzianisbova.parceldelivery.packing.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
+import org.dzianisbova.parceldelivery.packing.domain.algorithm.Level;
+import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,79 +23,79 @@ class LevelTest {
     }
 
     @Nested
-    @DisplayName("canFit()")
-    class CanFit {
+    @DisplayName("findLowestAvailablePosition()")
+    class FindLowestAvailablePosition {
         @Test
-        @DisplayName("returns true when level is empty")
-        void returnsTrue_WhenLevelIsEmpty() {
+        @DisplayName("returns position when level is empty")
+        void returnsPosition_WhenLevelIsEmpty() {
             Parcel parcel = parcel(10, 10, 10);
 
-            boolean result = level.canFit(parcel);
+            Position result = level.findLowestAvailablePosition(parcel);
 
-            assertTrue(result);
+            assertNotNull(result);
         }
 
         @Test
-        @DisplayName("returns false when parcel exceeds container bounds")
-        void returnsFalse_WhenParcelExceedsBounds() {
+        @DisplayName("returns null when parcel exceeds container bounds")
+        void returnsNull_WhenParcelExceedsBounds() {
             Parcel parcel = parcel(101, 101, 101);
 
-            boolean result = level.canFit(parcel);
+            Position result = level.findLowestAvailablePosition(parcel);
 
-            assertFalse(result);
+            assertNull(result);
         }
 
         @Test
-        @DisplayName("returns false when level is fully occupied")
-        void returnsFalse_WhenLevelFullyOccupied() {
-            Parcel fullWidthParcel = parcel(100, 100, 95);
-            level.placeParcel(fullWidthParcel);
+        @DisplayName("returns null when level is fully occupied")
+        void returnsNull_WhenLevelFullyOccupied() {
+            place(level, parcel(100, 100, 95));
             Parcel anotherParcel = parcel(10, 10, 10);
 
-            boolean result = level.canFit(anotherParcel);
+            Position result = level.findLowestAvailablePosition(anotherParcel);
 
-            assertFalse(result);
+            assertNull(result);
         }
     }
 
     @Nested
-    @DisplayName("placeParcel()")
-    class PlaceParcel {
+    @DisplayName("placeParcelAt()")
+    class PlaceParcelAt {
         @Test
         @DisplayName("adds parcel to placements list")
         void addsParcel_ToPlacements() {
             Parcel parcel = parcel(10, 10, 10);
 
-            level.placeParcel(parcel);
+            place(level, parcel);
 
             assertEquals(1, level.getPlacements().size());
         }
 
         @Test
-        @DisplayName("throws IllegalStateException when parcel does not fit")
+        @DisplayName("throws IllegalStateException when parcel does not fit at position")
         void throwsException_WhenParcelDoesNotFit() {
             Parcel parcel = parcel(101, 101, 101);
+            Position outOfBounds = new Position(0, 0, 0);
 
-            assertThrows(IllegalStateException.class, () -> level.placeParcel(parcel));
+            assertThrows(IllegalStateException.class, () -> level.placeParcelAt(parcel, outOfBounds));
         }
 
         @Test
-        @DisplayName("updates level height to parcel height")
-        void updatesHeight_ToParcelHeight() {
+        @DisplayName("updates maxPlacedHeight to parcel height")
+        void updatesMaxPlacedHeight_ToParcelHeight() {
             Parcel parcel = parcel(10, 10, 20);
 
-            level.placeParcel(parcel);
+            place(level, parcel);
 
-            assertEquals(20, level.getHeight());
+            assertEquals(20, level.getMaxPlacedHeight());
         }
 
         @Test
-        @DisplayName("updates level height to tallest parcel")
-        void updatesHeight_ToTallestParcel() {
-            level.placeParcel(parcel(10, 10, 10));
-            level.placeParcel(parcel(10, 10, 25));
+        @DisplayName("updates maxPlacedHeight to tallest parcel")
+        void updatesMaxPlacedHeight_ToTallestParcel() {
+            place(level, parcel(10, 10, 10));
+            place(level, parcel(10, 10, 25));
 
-            assertEquals(25, level.getHeight());
+            assertEquals(25, level.getMaxPlacedHeight());
         }
     }
 
@@ -101,13 +103,13 @@ class LevelTest {
     @DisplayName("getTopZ()")
     class GetTopZ {
         @Test
-        @DisplayName("returns start height plus level height")
-        void returnsSum_OfStartHeightAndLevelHeight() {
+        @DisplayName("returns start height plus max placed height")
+        void returnsSum_OfStartHeightAndMaxPlacedHeight() {
             double startHeight = 15;
             double parcelHeight = 20;
             Level levelAtHeight = new Level(startHeight, CONTAINER_100x100x100);
 
-            levelAtHeight.placeParcel(parcel(10, 10, parcelHeight));
+            place(levelAtHeight, parcel(10, 10, parcelHeight));
 
             assertEquals(35, levelAtHeight.getTopZ());
         }
@@ -120,6 +122,12 @@ class LevelTest {
 
             assertEquals(10, levelAtHeight.getTopZ());
         }
+    }
+
+    private void place(Level level, Parcel parcel) {
+        Position pos = level.findLowestAvailablePosition(parcel);
+        assertNotNull(pos, "Expected a valid position for parcel " + parcel.getId());
+        level.placeParcelAt(parcel, pos);
     }
 
     private Parcel parcel(double length, double width, double height) {
