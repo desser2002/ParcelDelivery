@@ -5,7 +5,6 @@ import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.packing.domain.algorithm.Level;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -23,10 +22,9 @@ class LevelTest {
     }
 
     @Nested
-    @DisplayName("findLowestAvailablePosition()")
     class FindLowestAvailablePosition {
+
         @Test
-        @DisplayName("returns position when level is empty")
         void returnsPosition_WhenLevelIsEmpty() {
             Parcel parcel = parcel(10, 10, 10);
 
@@ -36,7 +34,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("returns null when parcel exceeds container bounds")
         void returnsNull_WhenParcelExceedsBounds() {
             Parcel parcel = parcel(101, 101, 101);
 
@@ -46,7 +43,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("returns null when level is fully occupied")
         void returnsNull_WhenLevelFullyOccupied() {
             place(level, parcel(100, 100, 95));
             Parcel anotherParcel = parcel(10, 10, 10);
@@ -58,10 +54,9 @@ class LevelTest {
     }
 
     @Nested
-    @DisplayName("placeParcelAt()")
     class PlaceParcelAt {
+
         @Test
-        @DisplayName("adds parcel to placements list")
         void addsParcel_ToPlacements() {
             Parcel parcel = parcel(10, 10, 10);
 
@@ -71,7 +66,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("throws IllegalStateException when parcel does not fit at position")
         void throwsException_WhenParcelDoesNotFit() {
             Parcel parcel = parcel(101, 101, 101);
             Position outOfBounds = new Position(0, 0, 0);
@@ -80,7 +74,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("updates maxPlacedHeight to parcel height")
         void updatesMaxPlacedHeight_ToParcelHeight() {
             Parcel parcel = parcel(10, 10, 20);
 
@@ -90,7 +83,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("updates maxPlacedHeight to tallest parcel")
         void updatesMaxPlacedHeight_ToTallestParcel() {
             place(level, parcel(10, 10, 10));
             place(level, parcel(10, 10, 25));
@@ -100,10 +92,9 @@ class LevelTest {
     }
 
     @Nested
-    @DisplayName("getTopZ()")
     class GetTopZ {
+
         @Test
-        @DisplayName("returns start height plus max placed height")
         void returnsSum_OfStartHeightAndMaxPlacedHeight() {
             double startHeight = 15;
             double parcelHeight = 20;
@@ -115,7 +106,6 @@ class LevelTest {
         }
 
         @Test
-        @DisplayName("returns start height when level is empty")
         void returnsStartHeight_WhenLevelEmpty() {
             double startHeight = 10;
             Level levelAtHeight = new Level(startHeight, CONTAINER_100x100x100);
