@@ -1,6 +1,6 @@
 package org.dzianisbova.parceldelivery.packing.config;
 
-import org.dzianisbova.parceldelivery.packing.domain.algorithm.LAFFLevelAlgorithm;
+import org.dzianisbova.parceldelivery.packing.domain.algorithm.BottomUpLevelAlgorithm;
 import org.dzianisbova.parceldelivery.packing.domain.algorithm.TopDownLevelAlgorithm;
 import org.dzianisbova.parceldelivery.packing.domain.algorithm.sort.BaseAreaDescSorter;
 import org.dzianisbova.parceldelivery.packing.domain.policy.PackingPolicy;
@@ -17,7 +17,7 @@ public class PackingConfiguration {
     @Bean
     public PackingStrategy packingStrategy(List<PackingPolicy> policies) {
         return new FragileZonePackingStrategy(
-                new LAFFLevelAlgorithm(),
+                new BottomUpLevelAlgorithm(),
                 new TopDownLevelAlgorithm(),
                 new BaseAreaDescSorter(),
                 policies

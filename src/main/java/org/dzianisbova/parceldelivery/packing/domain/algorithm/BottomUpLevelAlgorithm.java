@@ -8,7 +8,7 @@ import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LAFFLevelAlgorithm implements PackingAlgorithm {
+public class BottomUpLevelAlgorithm implements PackingAlgorithm {
     private List<Level> levels;
     private Dimensions vehicleDimensions;
 
