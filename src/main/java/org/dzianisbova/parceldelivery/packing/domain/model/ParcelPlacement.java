@@ -1,4 +1,4 @@
-package org.dzianisbova.parceldelivery.packing.model;
+package org.dzianisbova.parceldelivery.packing.domain.model;
 
 import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
@@ -23,15 +23,15 @@ public class ParcelPlacement {
     public boolean collidesWith(Position otherPosition, Dimensions otherDimensions) {
         Dimensions thisDimensions = parcel.getDimensions();
 
-        boolean collisionX = otherPosition.x() < position.x() + thisDimensions.length() &&
+        boolean overlapX = otherPosition.x() < position.x() + thisDimensions.length() &&
                 otherPosition.x() + otherDimensions.length() > position.x();
 
-        boolean collisionY = otherPosition.y() < position.y() + thisDimensions.width() &&
+        boolean overlapY = otherPosition.y() < position.y() + thisDimensions.width() &&
                 otherPosition.y() + otherDimensions.width() > position.y();
 
-        boolean collisionZ = otherPosition.z() < position.z() + thisDimensions.height() &&
+        boolean overlapZ = otherPosition.z() < position.z() + thisDimensions.height() &&
                 otherPosition.z() + otherDimensions.height() > position.z();
 
-        return collisionX && collisionY && collisionZ;
+        return overlapX && overlapY && overlapZ;
     }
 }
