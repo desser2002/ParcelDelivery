@@ -19,17 +19,21 @@ CREATE TABLE shipments
     sender_id        UUID,
 
     pickup_street    VARCHAR(255)     NOT NULL,
+    pickup_building  VARCHAR(20)      NOT NULL,
+    pickup_apartment VARCHAR(20),
     pickup_city      VARCHAR(100)     NOT NULL,
-    pickup_zip       VARCHAR(20),
+    pickup_postal_code VARCHAR(20),
     pickup_country   CHAR(2)          NOT NULL,
 
     recipient_name   VARCHAR(255)     NOT NULL,
     recipient_phone  VARCHAR(50),
 
-    delivery_street  VARCHAR(255)     NOT NULL,
-    delivery_city    VARCHAR(100)     NOT NULL,
-    delivery_zip     VARCHAR(20),
-    delivery_country CHAR(2)          NOT NULL,
+    delivery_street    VARCHAR(255)   NOT NULL,
+    delivery_building  VARCHAR(20)    NOT NULL,
+    delivery_apartment VARCHAR(20),
+    delivery_city      VARCHAR(100)   NOT NULL,
+    delivery_postal_code VARCHAR(20),
+    delivery_country   CHAR(2)        NOT NULL,
 
     length           DOUBLE PRECISION NOT NULL,
     width            DOUBLE PRECISION NOT NULL,
@@ -41,3 +45,5 @@ CREATE TABLE shipments
     status           VARCHAR(20)      NOT NULL DEFAULT 'PENDING',
     created_at       TIMESTAMP        NOT NULL DEFAULT now()
 );
+
+
