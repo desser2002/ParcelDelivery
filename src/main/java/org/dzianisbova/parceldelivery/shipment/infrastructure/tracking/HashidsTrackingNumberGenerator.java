@@ -11,10 +11,11 @@ public class HashidsTrackingNumberGenerator implements TrackingNumberGenerator {
     private final ShipmentJpaRepository shipmentJpaRepository;
     private final Hashids hashids;
 
-    public HashidsTrackingNumberGenerator(ShipmentJpaRepository shipmentJpaRepository, @Value("${tracking.hashids.salt}") String salt,
+    public HashidsTrackingNumberGenerator(ShipmentJpaRepository shipmentJpaRepository,
+                                          @Value("${tracking.hashids.salt}") String salt,
                                           @Value("${tracking.hashids.min-length}") int minLength) {
         this.shipmentJpaRepository = shipmentJpaRepository;
-        this.hashids = new Hashids(salt, minLength,"0123456789ABCDEF");
+        this.hashids = new Hashids(salt, minLength, "0123456789ABCDEF");
     }
 
     @Override
