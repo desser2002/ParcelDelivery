@@ -1,6 +1,8 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
+
+import java.util.UUID;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
@@ -29,7 +31,7 @@ public class ShipmentMapper {
         );
 
         Parcel parcel = new Parcel(
-                entity.getId().toString(),
+                entity.getParcelId().toString(),
                 new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
                 entity.getWeight(),
                 entity.isFragile(),
@@ -65,6 +67,7 @@ public class ShipmentMapper {
                 shipment.getDeliveryAddress().getCity(),
                 shipment.getDeliveryAddress().getPostalCode(),
                 shipment.getDeliveryAddress().getCountry(),
+                UUID.fromString(shipment.getParcel().getId()),
                 shipment.getParcel().getDimensions().length(),
                 shipment.getParcel().getDimensions().width(),
                 shipment.getParcel().getDimensions().height(),

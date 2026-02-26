@@ -5,6 +5,8 @@ import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 
+import java.util.UUID;
+
 public class ParcelDto {
     @Positive
     private double length;
@@ -28,7 +30,7 @@ public class ParcelDto {
                 : Priority.STANDARD;
 
         return new Parcel(
-                null,
+                UUID.randomUUID().toString(),
                 new Dimensions(length, width, height),
                 weight,
                 fragile,

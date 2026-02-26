@@ -64,6 +64,9 @@ public class ShipmentEntity {
     @Column(name = "delivery_country", nullable = false, length = 2)
     private String deliveryCountry;
 
+    @Column(name = "parcel_id", nullable = false, updatable = false)
+    private UUID parcelId;
+
     @Column(nullable = false)
     private double length;
 
