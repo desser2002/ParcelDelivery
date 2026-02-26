@@ -39,6 +39,6 @@ public class ShipmentService {
     @Transactional(readOnly = true)
     public Shipment findByTrackingNumber(String trackingNumber) {
         return shipmentRepository.findByTrackingNumber(trackingNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Shipment not found: " + trackingNumber));
+                .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
     }
 }
