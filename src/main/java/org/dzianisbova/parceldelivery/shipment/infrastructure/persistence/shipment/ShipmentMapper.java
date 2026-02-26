@@ -7,6 +7,7 @@ import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
+import org.dzianisbova.parceldelivery.shipment.domain.model.ShipmentStatus;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,6 +47,7 @@ public class ShipmentMapper {
                 entity.getRecipient(),
                 deliveryAddress,
                 parcel,
+                ShipmentStatus.valueOf(entity.getStatus()),
                 entity.getCreatedAt()
         );
     }

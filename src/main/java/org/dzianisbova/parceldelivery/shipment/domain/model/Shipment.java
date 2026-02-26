@@ -30,6 +30,18 @@ public class Shipment {
                     Address deliveryAddress,
                     Parcel parcel,
                     LocalDateTime createdAt) {
+        this(id, trackingNumber, senderId, pickupAddress, recipient, deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt);
+    }
+
+    public Shipment(UUID id,
+                    String trackingNumber,
+                    UUID senderId,
+                    Address pickupAddress,
+                    String recipient,
+                    Address deliveryAddress,
+                    Parcel parcel,
+                    ShipmentStatus status,
+                    LocalDateTime createdAt) {
         validate(trackingNumber, pickupAddress, recipient, deliveryAddress, parcel);
         this.id = id;
         this.trackingNumber = trackingNumber;
@@ -38,7 +50,7 @@ public class Shipment {
         this.recipient = recipient;
         this.deliveryAddress = deliveryAddress;
         this.parcel = parcel;
-        this.status = ShipmentStatus.PENDING;
+        this.status = status;
         this.createdAt = createdAt;
     }
 
