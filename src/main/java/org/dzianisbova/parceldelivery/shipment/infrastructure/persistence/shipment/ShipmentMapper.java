@@ -45,7 +45,8 @@ public class ShipmentMapper {
                 pickupAddress,
                 entity.getRecipient(),
                 deliveryAddress,
-                parcel
+                parcel,
+                entity.getCreatedAt()
         );
     }
 

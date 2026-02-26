@@ -9,6 +9,7 @@ import org.dzianisbova.parceldelivery.shipment.domain.port.TrackingNumberGenerat
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,8 @@ public class ShipmentService {
                 pickupAddress,
                 recipient,
                 deliveryAddress,
-                parcel
+                parcel,
+                LocalDateTime.now()
         );
         return shipmentRepository.save(shipment);
     }

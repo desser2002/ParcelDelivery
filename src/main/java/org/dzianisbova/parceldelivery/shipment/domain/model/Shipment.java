@@ -28,7 +28,8 @@ public class Shipment {
                     Address pickupAddress,
                     String recipient,
                     Address deliveryAddress,
-                    Parcel parcel) {
+                    Parcel parcel,
+                    LocalDateTime createdAt) {
         validate(trackingNumber, pickupAddress, recipient, deliveryAddress, parcel);
         this.id = id;
         this.trackingNumber = trackingNumber;
@@ -38,7 +39,7 @@ public class Shipment {
         this.deliveryAddress = deliveryAddress;
         this.parcel = parcel;
         this.status = ShipmentStatus.PENDING;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = createdAt;
     }
 
     private void validate(String trackingNumber,
