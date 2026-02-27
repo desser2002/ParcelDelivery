@@ -1,6 +1,6 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.tracking;
 
-import org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment.ShipmentJpaRepository;
+import org.dzianisbova.parceldelivery.shipment.domain.port.TrackingIdSource;
 import org.hashids.Hashids;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,18 +15,18 @@ class HashidsTrackingNumberGeneratorTest {
     private static final String SALT = "test-salt";
     private static final int MIN_LENGTH = 8;
 
-    private ShipmentJpaRepository repository;
+    private TrackingIdSource trackingIdSource;
     private HashidsTrackingNumberGenerator generator;
 
     @BeforeEach
     void setUp() {
-        repository = mock(ShipmentJpaRepository.class);
-        generator = new HashidsTrackingNumberGenerator(repository, SALT, MIN_LENGTH);
+        trackingIdSource = mock(TrackingIdSource.class);
+        generator = new HashidsTrackingNumberGenerator(trackingIdSource, SALT, MIN_LENGTH);
     }
 
     @Test
     void generate_encodesSequenceValueWithHashids() {
-        when(repository.nextTrackingNumber()).thenReturn(42L);
+        when(trackingIdSource.next()).thenReturn(42L);
 
         String result = generator.generate();
 
@@ -35,7 +35,7 @@ class HashidsTrackingNumberGeneratorTest {
 
     @Test
     void generate_respectsMinLength() {
-        when(repository.nextTrackingNumber()).thenReturn(1L);
+        when(trackingIdSource.next()).thenReturn(1L);
 
         String result = generator.generate();
 
@@ -44,7 +44,7 @@ class HashidsTrackingNumberGeneratorTest {
 
     @Test
     void generate_hashidsOutputIsStableAcrossLibraryVersions() {
-        when(repository.nextTrackingNumber()).thenReturn(1L);
+        when(trackingIdSource.next()).thenReturn(1L);
 
         String result = generator.generate();
         assertEquals("E298E283", result);

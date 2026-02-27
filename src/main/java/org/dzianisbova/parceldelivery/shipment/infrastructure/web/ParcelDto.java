@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class ParcelDto {
+class ParcelDto {
     @Positive
     private double length;
 

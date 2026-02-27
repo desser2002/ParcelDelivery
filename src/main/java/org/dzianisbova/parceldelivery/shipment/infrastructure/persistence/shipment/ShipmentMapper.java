@@ -1,8 +1,6 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
-
-import java.util.UUID;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
@@ -10,8 +8,10 @@ import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
 import org.dzianisbova.parceldelivery.shipment.domain.model.ShipmentStatus;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
-public class ShipmentMapper {
+class ShipmentMapper {
     public Shipment toDomain(ShipmentEntity entity) {
         Address pickupAddress = new Address(
                 entity.getPickupStreet(),

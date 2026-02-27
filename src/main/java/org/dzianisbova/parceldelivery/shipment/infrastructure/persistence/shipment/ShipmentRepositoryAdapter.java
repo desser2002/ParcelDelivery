@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class ShipmentRepositoryAdapter implements ShipmentRepository {
+class ShipmentRepositoryAdapter implements ShipmentRepository {
     private final ShipmentJpaRepository jpaRepository;
     private final ShipmentMapper mapper;
 

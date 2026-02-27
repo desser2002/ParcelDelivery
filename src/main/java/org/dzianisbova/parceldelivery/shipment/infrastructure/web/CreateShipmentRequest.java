@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public class CreateShipmentRequest {
+class CreateShipmentRequest {
     @Valid
     @NotNull
     private AddressDto pickupAddress;
