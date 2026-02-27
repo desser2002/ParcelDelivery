@@ -1,12 +1,17 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.web;
 
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 
 import java.util.UUID;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
 public class ParcelDto {
     @Positive
     private double length;
