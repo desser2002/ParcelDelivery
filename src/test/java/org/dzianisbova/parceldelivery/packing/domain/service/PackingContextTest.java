@@ -1,4 +1,4 @@
-package org.dzianisbova.parceldelivery.packing.service;
+package org.dzianisbova.parceldelivery.packing.domain.service;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
@@ -6,7 +6,6 @@ import org.dzianisbova.parceldelivery.domain.model.Priority;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
-import org.dzianisbova.parceldelivery.packing.domain.service.PackingContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

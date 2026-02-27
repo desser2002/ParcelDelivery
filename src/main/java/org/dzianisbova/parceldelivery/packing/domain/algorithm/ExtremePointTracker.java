@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ExtremePointTracker {
+class ExtremePointTracker {
     private final List<Position> points;
     private final Dimensions containerBounds;
 

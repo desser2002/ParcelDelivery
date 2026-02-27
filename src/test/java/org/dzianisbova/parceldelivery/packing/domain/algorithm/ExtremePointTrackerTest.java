@@ -1,8 +1,7 @@
-package org.dzianisbova.parceldelivery.packing.algorithm;
+package org.dzianisbova.parceldelivery.packing.domain.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
-import org.dzianisbova.parceldelivery.packing.domain.algorithm.ExtremePointTracker;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.junit.jupiter.api.Test;

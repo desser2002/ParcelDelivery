@@ -12,7 +12,7 @@ import org.dzianisbova.parceldelivery.packing.domain.policy.PackingPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragileZonePackingStrategy implements PackingStrategy {
+class FragileZonePackingStrategy implements PackingStrategy {
     private final PackingAlgorithm algorithm;
     private final PackingAlgorithm fragileAlgorithm;
     private final ParcelSorter sorter;
