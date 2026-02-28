@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TopDownLevelAlgorithmTest {
-
     private TopDownLevelAlgorithm algorithm;
     private PackingContext context;
 
@@ -51,7 +50,6 @@ class TopDownLevelAlgorithmTest {
 
     @Nested
     class NewStartHeightBoundary {
-
         @Test
         void createsLevel_WhenNewStartHeightIsZero() {
             context = new PackingContext(new Vehicle("V-2", new Dimensions(100, 100, 20), 1000.0));

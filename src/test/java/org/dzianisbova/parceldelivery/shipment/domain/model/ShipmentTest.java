@@ -15,7 +15,6 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShipmentTest {
-
     private static final UUID ID = UUID.randomUUID();
     private static final String TRACKING = "ABC12345";
     private static final LocalDateTime CREATED_AT = LocalDateTime.now();

@@ -11,7 +11,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class HashidsTrackingNumberGeneratorTest {
-
     private static final String SALT = "test-salt";
     private static final int MIN_LENGTH = 8;
 

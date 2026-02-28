@@ -14,9 +14,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShipmentMapperTest {
-
     private final ShipmentMapper mapper = new ShipmentMapper();
-
     private static final UUID ID = UUID.randomUUID();
     private static final UUID SENDER_ID = UUID.randomUUID();
     private static final UUID PARCEL_ID = UUID.randomUUID();

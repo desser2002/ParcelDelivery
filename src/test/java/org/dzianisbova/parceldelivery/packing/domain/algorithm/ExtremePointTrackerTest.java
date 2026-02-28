@@ -11,7 +11,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExtremePointTrackerTest {
-
     private static final Dimensions CONTAINER_100x100x100 = new Dimensions(100, 100, 100);
 
     @Test

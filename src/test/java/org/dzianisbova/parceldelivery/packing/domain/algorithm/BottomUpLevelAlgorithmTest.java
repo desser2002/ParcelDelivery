@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BottomUpLevelAlgorithmTest {
-
     private BottomUpLevelAlgorithm algorithm;
     private PackingContext context;
 
@@ -51,7 +50,6 @@ class BottomUpLevelAlgorithmTest {
 
     @Nested
     class CanCreateNewLevelBoundary {
-
         @Test
         void returnsPosition_WhenParcelFitsExactlyToCeiling() {
             place(parcel(100, 100, 60));

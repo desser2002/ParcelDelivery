@@ -6,10 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MultiVehiclePackingResult {
-    private final List<VehiclePackingResult> vehicleResults;
-    private final List<Parcel> unpackedParcels;
-
+public record MultiVehiclePackingResult(List<VehiclePackingResult> vehicleResults, List<Parcel> unpackedParcels) {
     public MultiVehiclePackingResult(
             List<VehiclePackingResult> vehicleResults,
             List<Parcel> unpackedParcels) {
@@ -17,23 +14,25 @@ public class MultiVehiclePackingResult {
         this.unpackedParcels = new ArrayList<>(unpackedParcels);
     }
 
-    public List<VehiclePackingResult> getVehicleResults() {
+    @Override
+    public List<VehiclePackingResult> vehicleResults() {
         return Collections.unmodifiableList(vehicleResults);
     }
 
-    public List<Parcel> getUnpackedParcels() {
+    @Override
+    public List<Parcel> unpackedParcels() {
         return Collections.unmodifiableList(unpackedParcels);
     }
 
     public int getTotalPackedParcels() {
         return vehicleResults.stream()
-                .mapToInt(r -> r.getPlacements().size())
+                .mapToInt(r -> r.placements().size())
                 .sum();
     }
 
     public int getUsedVehicles() {
         return (int) vehicleResults.stream()
-                .filter(r -> !r.getPlacements().isEmpty())
+                .filter(r -> !r.placements().isEmpty())
                 .count();
     }
 }

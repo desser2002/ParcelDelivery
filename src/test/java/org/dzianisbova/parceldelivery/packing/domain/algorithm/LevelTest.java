@@ -22,7 +22,6 @@ class LevelTest {
 
     @Nested
     class FindLowestAvailablePosition {
-
         @Test
         void returnsPosition_WhenLevelIsEmpty() {
             Parcel parcel = parcel(10, 10, 10);
@@ -54,7 +53,6 @@ class LevelTest {
 
     @Nested
     class PlaceParcelAt {
-
         @Test
         void addsParcel_ToPlacements() {
             Parcel parcel = parcel(10, 10, 10);
@@ -92,7 +90,6 @@ class LevelTest {
 
     @Nested
     class GetTopZ {
-
         @Test
         void returnsSum_OfStartHeightAndMaxPlacedHeight() {
             double startHeight = 15;

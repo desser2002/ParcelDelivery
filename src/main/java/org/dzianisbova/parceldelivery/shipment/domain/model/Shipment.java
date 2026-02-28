@@ -30,7 +30,8 @@ public class Shipment {
                     Address deliveryAddress,
                     Parcel parcel,
                     LocalDateTime createdAt) {
-        this(id, trackingNumber, senderId, pickupAddress, recipient, deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt);
+        this(id, trackingNumber, senderId, pickupAddress, recipient,
+                deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt);
     }
 
     public Shipment(UUID id,

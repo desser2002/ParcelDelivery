@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,13 +28,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ShipmentController.class)
 class ShipmentControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
-
     @MockitoBean
     private ShipmentService shipmentService;
-
     private static final String VALID_REQUEST = """
             {
               "pickupAddress":  { "street": "Pickup St",  "building": "1", "city": "Warsaw",  "country": "PL" },
@@ -58,7 +54,6 @@ class ShipmentControllerTest {
 
     @Nested
     class CreateShipment {
-
         @Test
         void validRequest_returns201WithTrackingNumberAndStatus() throws Exception {
             when(shipmentService.createShipment(any(), any(), any(), any()))
@@ -83,7 +78,6 @@ class ShipmentControllerTest {
 
     @Nested
     class TrackShipment {
-
         @Test
         void existingTrackingNumber_returns200WithShipment() throws Exception {
             when(shipmentService.findByTrackingNumber("TRACK123"))

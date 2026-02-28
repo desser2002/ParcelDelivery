@@ -24,13 +24,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ShipmentServiceTest {
-
     @Mock
     private ShipmentRepository shipmentRepository;
-
     @Mock
     private TrackingNumberGenerator trackingNumberGenerator;
-
     @InjectMocks
     private ShipmentService shipmentService;
 
@@ -48,7 +45,6 @@ class ShipmentServiceTest {
 
     @Nested
     class CreateShipment {
-
         @Test
         void savesShipmentWithGeneratedTrackingNumberAndCorrectFields() {
             Address pickup = pickupAddress();
@@ -74,7 +70,6 @@ class ShipmentServiceTest {
 
     @Nested
     class FindByTrackingNumber {
-
         @Test
         void throwsShipmentNotFoundExceptionWhenMissing() {
             when(shipmentRepository.findByTrackingNumber("UNKNOWN")).thenReturn(Optional.empty());

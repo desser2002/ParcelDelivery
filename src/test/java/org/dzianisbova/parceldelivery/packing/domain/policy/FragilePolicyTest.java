@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FragilePolicyTest {
-
     private static final Dimensions DIM_10x10x10 = new Dimensions(10, 10, 10);
 
     private FragilePolicy policy;

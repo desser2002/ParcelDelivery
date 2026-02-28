@@ -69,7 +69,7 @@ class FragileZonePackingStrategy implements PackingStrategy {
             placements.add(placement);
         }
 
-        return new VehiclePackingResult(vehicle.getId(), placements);
+        return new VehiclePackingResult(vehicle.id(), placements);
     }
 
     private boolean policiesReject(Parcel parcel, Position position, PackingContext context) {

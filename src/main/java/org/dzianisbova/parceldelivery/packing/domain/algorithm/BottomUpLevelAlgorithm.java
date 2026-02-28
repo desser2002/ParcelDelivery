@@ -17,7 +17,7 @@ class BottomUpLevelAlgorithm implements PackingAlgorithm {
 
     @Override
     public void initialize(PackingContext context) {
-        this.vehicleDimensions = context.getVehicle().getDimensions();
+        this.vehicleDimensions = context.getVehicle().dimensions();
         this.levels = new ArrayList<>();
         this.levels.add(new Level(0, vehicleDimensions));
     }
