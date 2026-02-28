@@ -1,9 +1,8 @@
-package org.dzianisbova.parceldelivery.packing.algorithm;
+package org.dzianisbova.parceldelivery.packing.domain.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
-import org.dzianisbova.parceldelivery.packing.domain.algorithm.TopDownLevelAlgorithm;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.dzianisbova.parceldelivery.packing.domain.service.PackingContext;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TopDownLevelAlgorithmTest {
-
     private TopDownLevelAlgorithm algorithm;
     private PackingContext context;
 
@@ -52,7 +50,6 @@ class TopDownLevelAlgorithmTest {
 
     @Nested
     class NewStartHeightBoundary {
-
         @Test
         void createsLevel_WhenNewStartHeightIsZero() {
             context = new PackingContext(new Vehicle("V-2", new Dimensions(100, 100, 20), 1000.0));

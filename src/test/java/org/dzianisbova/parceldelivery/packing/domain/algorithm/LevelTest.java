@@ -1,8 +1,7 @@
-package org.dzianisbova.parceldelivery.packing.algorithm;
+package org.dzianisbova.parceldelivery.packing.domain.algorithm;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
-import org.dzianisbova.parceldelivery.packing.domain.algorithm.Level;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -23,7 +22,6 @@ class LevelTest {
 
     @Nested
     class FindLowestAvailablePosition {
-
         @Test
         void returnsPosition_WhenLevelIsEmpty() {
             Parcel parcel = parcel(10, 10, 10);
@@ -55,7 +53,6 @@ class LevelTest {
 
     @Nested
     class PlaceParcelAt {
-
         @Test
         void addsParcel_ToPlacements() {
             Parcel parcel = parcel(10, 10, 10);
@@ -93,7 +90,6 @@ class LevelTest {
 
     @Nested
     class GetTopZ {
-
         @Test
         void returnsSum_OfStartHeightAndMaxPlacedHeight() {
             double startHeight = 15;

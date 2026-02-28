@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum Priority {
     STANDARD(1),
-    HIGH(2);
+    EXPRESS(2);
 
     private final int value;
 
