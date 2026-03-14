@@ -1,6 +1,7 @@
 package org.dzianisbova.parceldelivery.assignment;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.packing.domain.model.MultiVehiclePackingResult;
 import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
 import org.dzianisbova.parceldelivery.packing.domain.service.MultiVehiclePackingService;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PackingOrchestrationService {
@@ -27,13 +29,18 @@ public class PackingOrchestrationService {
     public void runPacking() {
         List<Shipment> pendingShipments = shipmentRepository.findAllByStatus(ShipmentStatus.PENDING);
         if (pendingShipments.isEmpty()) {
+            log.debug("[PACKING] No pending shipments, skipping");
             return;
         }
 
         var availableVehicles = vehicleRepository.findAvailable();
         if (availableVehicles.isEmpty()) {
+            log.warn("[PACKING] No available vehicles, pending shipments: {}", pendingShipments.size());
             return;
         }
+
+        log.info("[Packing] Start - pending: {}, vehicles: {}", pendingShipments.size(), availableVehicles.size());
+        long packingStartTime = System.currentTimeMillis();
 
         Map<String, Shipment> shipmentByParcelId = pendingShipments.stream()
                 .collect(Collectors.toMap(s -> s.getParcel().getId(), s -> s));
@@ -42,10 +49,14 @@ public class PackingOrchestrationService {
                 .map(Shipment::getParcel)
                 .toList();
 
+        long algorithmStartTime = System.currentTimeMillis();
+
         MultiVehiclePackingResult result = packingService.packSequentially(parcelsToPack, availableVehicles);
+        log.debug("[PACKING] Algorithm finished in {}ms", System.currentTimeMillis() - algorithmStartTime);
 
         for (VehiclePackingResult vehicleResult : result.vehicleResults()) {
             UUID vehicleId = vehicleResult.vehicleId();
+            log.debug("[PACKING] Vehicle {} — {} parcels", vehicleId, vehicleResult.placements().size());
 
             vehicleResult.placements().forEach(placement -> {
                 Shipment shipment = shipmentByParcelId.get(placement.parcel().getId());
@@ -55,5 +66,11 @@ public class PackingOrchestrationService {
 
             vehicleRepository.assign(vehicleId);
         }
+        log.info("[PACKING] DONE — packed: {}, unpacked: {}, vehicles used: {}/{}, total time: {}ms",
+                result.getTotalPackedParcels(),
+                result.unpackedParcels().size(),
+                result.getUsedVehicles(),
+                availableVehicles.size(),
+                System.currentTimeMillis() - packingStartTime);
     }
 }

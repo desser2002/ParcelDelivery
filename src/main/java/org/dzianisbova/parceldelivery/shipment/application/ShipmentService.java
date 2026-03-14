@@ -1,6 +1,7 @@
 package org.dzianisbova.parceldelivery.shipment.application;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ShipmentService {
@@ -33,7 +35,9 @@ public class ShipmentService {
                 parcel,
                 LocalDateTime.now()
         );
-        return shipmentRepository.save(shipment);
+        Shipment saved = shipmentRepository.save(shipment);
+        log.info("[SHIPMENT] Created tracking: {}", saved.getTrackingNumber());
+        return saved;
     }
 
     @Transactional(readOnly = true)
