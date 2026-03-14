@@ -1,6 +1,9 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ShipmentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     private UUID id;
 
@@ -90,4 +92,7 @@ public class ShipmentEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "vehicle_id")
+    private UUID vehicleId;
 }
