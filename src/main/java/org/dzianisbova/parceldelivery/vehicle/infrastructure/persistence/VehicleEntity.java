@@ -38,4 +38,7 @@ class VehicleEntity {
 
     @Column(nullable = false, length = 20)
     private String status;
+
+    @Column(name = "packed_volume", nullable = false)
+    private double packedVolume;
 }

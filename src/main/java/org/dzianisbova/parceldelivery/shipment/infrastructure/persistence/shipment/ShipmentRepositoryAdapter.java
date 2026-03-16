@@ -22,6 +22,14 @@ class ShipmentRepositoryAdapter implements ShipmentRepository {
     }
 
     @Override
+    public List<Shipment> saveAll(List<Shipment> shipments) {
+        return jpaRepository.saveAll(shipments.stream().map(mapper::toEntity).toList())
+                .stream()
+                .map(mapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public Optional<Shipment> findById(UUID id) {
         return jpaRepository.findById(id).map(mapper::toDomain);
     }

@@ -10,6 +10,8 @@ import java.util.UUID;
 public interface ShipmentRepository {
     Shipment save(Shipment shipment);
 
+    List<Shipment> saveAll(List<Shipment> shipments);
+
     Optional<Shipment> findById(UUID id);
 
     Optional<Shipment> findByTrackingNumber(String trackingNumber);

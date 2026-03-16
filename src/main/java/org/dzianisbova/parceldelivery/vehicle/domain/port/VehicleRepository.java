@@ -9,4 +9,6 @@ public interface VehicleRepository {
     List<Vehicle> findAvailable();
 
     void assign(UUID vehicleId);
+
+    void addPackedVolume(UUID vehicleId, double addedVolume);
 }

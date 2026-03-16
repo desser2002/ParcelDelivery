@@ -27,4 +27,12 @@ class VehicleRepositoryAdapter implements VehicleRepository {
     public void assign(UUID vehicleId) {
         jpaRepository.updateStatus(vehicleId, VehicleStatus.ASSIGNED.name());
     }
+
+    @Override
+    public void addPackedVolume(UUID vehicleId, double addedVolume) {
+        if (addedVolume <= 0) {
+            throw new IllegalArgumentException("Added volume must be positive, got: " + addedVolume);
+        }
+        jpaRepository.addPackedVolume(vehicleId, addedVolume);
+    }
 }
