@@ -37,7 +37,8 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
     }
 
     @Override
-    public void savePlacements(UUID vehicleId, List<ParcelPlacement> placements, Map<String, UUID> parcelIdToShipmentId) {
+    public void savePlacements(UUID vehicleId, List<ParcelPlacement> placements,
+                               Map<String, UUID> parcelIdToShipmentId) {
         List<PackingPlacementEntity> entities = placements.stream()
                 .map(p -> toEntity(vehicleId, p, parcelIdToShipmentId.get(p.parcel().getId())))
                 .toList();

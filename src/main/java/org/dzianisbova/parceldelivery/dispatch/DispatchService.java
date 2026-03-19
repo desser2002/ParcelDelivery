@@ -44,7 +44,8 @@ public class DispatchService {
             return;
         }
 
-        List<DispatchVehicle> availableVehicles = vehicleOrderingStrategy.sort(dispatchVehicleRepository.findAvailable());
+        List<DispatchVehicle> availableVehicles = vehicleOrderingStrategy
+                .sort(dispatchVehicleRepository.findAvailable());
         if (availableVehicles.isEmpty()) {
             log.warn("[DISPATCH] No available vehicles, pending shipments: {}", pendingShipments.size());
             return;
