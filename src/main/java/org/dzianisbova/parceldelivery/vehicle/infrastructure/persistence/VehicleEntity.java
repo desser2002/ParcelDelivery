@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-class VehicleEntity {
+public class VehicleEntity {
     @Id
     @Column(updatable = false, nullable = false)
     private UUID id;

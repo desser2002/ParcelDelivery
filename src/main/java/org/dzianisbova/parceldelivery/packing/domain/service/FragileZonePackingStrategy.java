@@ -37,39 +37,37 @@ class FragileZonePackingStrategy implements PackingStrategy {
         this.policies = policies != null ? new ArrayList<>(policies) : new ArrayList<>();
     }
 
-    @Override
-    public VehiclePackingResult pack(List<Parcel> parcels, Vehicle vehicle) {
+    public VehiclePackingResult pack(List<Parcel> parcels, Vehicle vehicle,
+                                     List<ParcelPlacement> existingPlacements) {
         List<Parcel> sorted = sorter.sort(parcels);
 
-        PackingContext context = new PackingContext(vehicle);
+        PackingContext context = new PackingContext(vehicle, existingPlacements);
         algorithm.initialize(context);
         fragileAlgorithm.initialize(context);
-
-        List<ParcelPlacement> placements = new ArrayList<>();
-
+        for (ParcelPlacement existing : existingPlacements) {
+            PackingAlgorithm active = existing.parcel().isFragile() ? fragileAlgorithm : algorithm;
+            active.notifyPlaced(existing.parcel(), existing.position());
+        }
+        List<ParcelPlacement> newPlacements = new ArrayList<>();
         for (Parcel parcel : sorted) {
             if (context.exceedsWeightLimit(parcel.getWeight())) {
                 continue;
             }
-
             PackingAlgorithm active = parcel.isFragile() ? fragileAlgorithm : algorithm;
-
             Position position = active.findPosition(parcel, context);
             if (position == null) {
                 continue;
             }
-
             if (policiesReject(parcel, position, context)) {
                 continue;
             }
-
             ParcelPlacement placement = new ParcelPlacement(parcel, position);
             context.addPlacement(placement);
             active.notifyPlaced(parcel, position);
-            placements.add(placement);
+            newPlacements.add(placement);
         }
 
-        return new VehiclePackingResult(vehicle.id(), placements);
+        return new VehiclePackingResult(vehicle.id(), newPlacements);
     }
 
     private boolean policiesReject(Parcel parcel, Position position, PackingContext context) {

@@ -6,6 +6,7 @@ import org.dzianisbova.parceldelivery.dispatch.port.DispatchVehicleRepository;
 import org.dzianisbova.parceldelivery.dispatch.strategy.VehicleOrderingStrategy;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.MultiVehiclePackingResult;
+import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
 import org.dzianisbova.parceldelivery.packing.domain.service.MultiVehiclePackingService;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
@@ -59,12 +60,20 @@ public class DispatchService {
                 .map(Shipment::getParcel)
                 .toList();
 
+        Map<UUID, List<ParcelPlacement>> existingByVehicle = availableVehicles.stream()
+                .collect(Collectors.toMap(
+                        DispatchVehicle::id,
+                        v -> dispatchVehicleRepository.findConfirmedPlacements(v.id())
+                ));
+
         long algorithmStartTime = System.currentTimeMillis();
 
-        MultiVehiclePackingResult result = packingService.packSequentially(parcelsToPack,
+        MultiVehiclePackingResult result = packingService.packSequentially(
+                parcelsToPack,
                 availableVehicles.stream()
                         .map(v -> new Vehicle(v.id(), v.plateNumber(), v.dimensions(), v.maxWeight()))
-                        .toList());
+                        .toList(),
+                existingByVehicle);
         log.debug("[DISPATCH] Algorithm finished in {}ms", System.currentTimeMillis() - algorithmStartTime);
 
         for (VehiclePackingResult vehicleResult : result.vehicleResults()) {
@@ -83,6 +92,10 @@ public class DispatchService {
                     .toList();
             shipmentRepository.saveAll(confirmed);
 
+            Map<String, UUID> parcelIdToShipmentId = confirmed.stream()
+                    .collect(Collectors.toMap(s -> s.getParcel().getId(), Shipment::getId));
+            dispatchVehicleRepository.savePlacements(vehicleId, vehicleResult.placements(), parcelIdToShipmentId);
+
             vehicleRepository.addPackedVolume(vehicleId, addedVolume);
 
             DispatchVehicle dispatchVehicle = availableVehicles.stream()
@@ -98,6 +111,7 @@ public class DispatchService {
             if (updatedVehicle.isLoadComplete(fillThreshold)) {
                 log.info("[DISPATCH] Vehicle {} reached fill threshold, marking ASSIGNED", vehicleId);
                 vehicleRepository.assign(vehicleId);
+                dispatchVehicleRepository.deletePlacements(vehicleId);
             } else {
                 log.debug("[DISPATCH] Vehicle {} below threshold, keeping AVAILABLE", vehicleId);
             }

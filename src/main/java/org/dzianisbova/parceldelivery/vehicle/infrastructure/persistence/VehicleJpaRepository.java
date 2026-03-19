@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.UUID;
 
-interface VehicleJpaRepository extends JpaRepository<VehicleEntity, UUID> {
+public interface VehicleJpaRepository extends JpaRepository<VehicleEntity, UUID> {
     List<VehicleEntity> findAllByStatus(String status);
 
     @Modifying

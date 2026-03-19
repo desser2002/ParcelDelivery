@@ -21,6 +21,14 @@ public class PackingContext {
         this.currentWeight = 0.0;
     }
 
+    public PackingContext(Vehicle vehicle, List<ParcelPlacement> existingPlacements) {
+        this.vehicle = vehicle;
+        this.placedParcels = new ArrayList<>(existingPlacements);
+        this.currentWeight = existingPlacements.stream()
+                .mapToDouble(p -> p.parcel().getWeight())
+                .sum();
+    }
+
     public List<ParcelPlacement> getPlacedParcels() {
         return Collections.unmodifiableList(placedParcels);
     }
