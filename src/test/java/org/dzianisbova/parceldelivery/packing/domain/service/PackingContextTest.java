@@ -1,4 +1,4 @@
-package org.dzianisbova.parceldelivery.packing.service;
+package org.dzianisbova.parceldelivery.packing.domain.service;
 
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
@@ -6,7 +6,6 @@ import org.dzianisbova.parceldelivery.domain.model.Priority;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
-import org.dzianisbova.parceldelivery.packing.domain.service.PackingContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,10 +15,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PackingContextTest {
-
     private static final Dimensions VEHICLE_DIM = new Dimensions(100, 100, 100);
     private static final double MAX_WEIGHT = 100.0;
-
     private PackingContext context;
 
     @BeforeEach
@@ -30,7 +27,6 @@ class PackingContextTest {
 
     @Nested
     class ExceedsWeightLimit {
-
         @Test
         void returnsFalse_WhenWeightExactlyAtLimit() {
             context.addPlacement(placement(parcel(60.0), Position.origin()));
@@ -58,7 +54,6 @@ class PackingContextTest {
 
     @Nested
     class GetParcelsAbove {
-
         @Test
         void includesParcel_WhenStartsExactlyAtTopZ() {
             context.addPlacement(placement(parcel(5.0), new Position(0, 0, 10)));
@@ -114,7 +109,6 @@ class PackingContextTest {
 
     @Nested
     class GetFragileParcelsBelow {
-
         @Test
         void excludesParcel_WhenNotFragile() {
             context.addPlacement(placement(standardParcel(5.0), new Position(0, 0, 0)));
@@ -162,7 +156,6 @@ class PackingContextTest {
 
     @Nested
     class IsSpaceOccupied {
-
         @Test
         void returnsTrue_WhenSpaceOccupied() {
             context.addPlacement(placement(parcel(5.0), new Position(0, 0, 0)));

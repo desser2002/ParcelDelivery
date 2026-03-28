@@ -1,16 +1,7 @@
 package org.dzianisbova.parceldelivery.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-
-@Getter
-@EqualsAndHashCode(of = "id")
-public class Vehicle {
-    private final String id;
-    private final Dimensions dimensions;
-    private final double maxWeight;
-
-    public Vehicle(String id, Dimensions dimensions, double maxWeight) {
+public record Vehicle(String id, Dimensions dimensions, double maxWeight) {
+    public Vehicle {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("Vehicle id cannot be empty");
         }
@@ -21,9 +12,5 @@ public class Vehicle {
         if (dimensions == null) {
             throw new IllegalArgumentException("Dimensions can't be null");
         }
-
-        this.id = id;
-        this.dimensions = dimensions;
-        this.maxWeight = maxWeight;
     }
 }

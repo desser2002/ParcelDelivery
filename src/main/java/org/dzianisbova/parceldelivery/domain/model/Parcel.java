@@ -37,7 +37,7 @@ public class Parcel {
     }
 
     public boolean isPriority() {
-        return priority == Priority.HIGH;
+        return priority == Priority.EXPRESS;
     }
 
     public boolean canRotate() {

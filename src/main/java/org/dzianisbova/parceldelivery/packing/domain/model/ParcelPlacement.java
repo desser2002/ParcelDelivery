@@ -1,23 +1,16 @@
 package org.dzianisbova.parceldelivery.packing.domain.model;
 
-import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 
-@Getter
-public class ParcelPlacement {
-    private final Parcel parcel;
-    private final Position position;
-
-    public ParcelPlacement(Parcel parcel, Position position) {
+public record ParcelPlacement(Parcel parcel, Position position) {
+    public ParcelPlacement {
         if (parcel == null) {
             throw new IllegalArgumentException("Parcel cannot be null");
         }
         if (position == null) {
             throw new IllegalArgumentException("Position cannot be null");
         }
-        this.parcel = parcel;
-        this.position = position;
     }
 
     public boolean collidesWith(Position otherPosition, Dimensions otherDimensions) {

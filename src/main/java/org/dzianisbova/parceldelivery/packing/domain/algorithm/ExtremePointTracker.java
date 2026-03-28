@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ExtremePointTracker {
+class ExtremePointTracker {
     private final List<Position> points;
     private final Dimensions containerBounds;
 
@@ -23,8 +23,8 @@ public class ExtremePointTracker {
     }
 
     public void update(ParcelPlacement placement) {
-        Position position = placement.getPosition();
-        Dimensions dimensions = placement.getParcel().getDimensions();
+        Position position = placement.position();
+        Dimensions dimensions = placement.parcel().getDimensions();
         points.remove(position);
         List<Position> newPoints = generateNew(position, dimensions);
         points.removeIf(point -> isInsideParcel(point, placement));
@@ -48,8 +48,8 @@ public class ExtremePointTracker {
     }
 
     private boolean isInsideParcel(Position point, ParcelPlacement placement) {
-        Position pos = placement.getPosition();
-        Dimensions dim = placement.getParcel().getDimensions();
+        Position pos = placement.position();
+        Dimensions dim = placement.parcel().getDimensions();
 
         boolean insideX = point.x() >= pos.x() && point.x() < pos.x() + dim.length();
         boolean insideY = point.y() >= pos.y() && point.y() < pos.y() + dim.width();

@@ -30,10 +30,10 @@ public class MultiVehiclePackingService {
             }
             VehiclePackingResult result = packingStrategy.pack(remaining, vehicle);
 
-            if (!result.getPlacements().isEmpty()) {
+            if (!result.placements().isEmpty()) {
                 results.add(result);
-                Set<String> packedIds = result.getPlacements().stream()
-                        .map(p -> p.getParcel().getId())
+                Set<String> packedIds = result.placements().stream()
+                        .map(p -> p.parcel().getId())
                         .collect(Collectors.toSet());
 
                 remaining = remaining.stream()
