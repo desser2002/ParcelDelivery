@@ -3,11 +3,10 @@ package org.dzianisbova.parceldelivery.packing.domain.service;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.MultiVehiclePackingResult;
+import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MultiVehiclePackingService {
@@ -20,7 +19,10 @@ public class MultiVehiclePackingService {
         this.packingStrategy = packingStrategy;
     }
 
-    public MultiVehiclePackingResult packSequentially(List<Parcel> parcels, List<Vehicle> vehicles) {
+    public MultiVehiclePackingResult packSequentially(
+            List<Parcel> parcels,
+            List<Vehicle> vehicles,
+            Map<UUID, List<ParcelPlacement>> existingByVehicle) {
         validateInputs(parcels, vehicles);
         List<VehiclePackingResult> results = new ArrayList<>();
         List<Parcel> remaining = new ArrayList<>(parcels);
@@ -28,19 +30,16 @@ public class MultiVehiclePackingService {
             if (remaining.isEmpty()) {
                 break;
             }
-            VehiclePackingResult result = packingStrategy.pack(remaining, vehicle);
 
+            List<ParcelPlacement> existing = existingByVehicle.getOrDefault(vehicle.id(), List.of());
+            VehiclePackingResult result = packingStrategy.pack(remaining, vehicle, existing);
             if (!result.placements().isEmpty()) {
                 results.add(result);
                 Set<String> packedIds = result.placements().stream()
-                        .map(p -> p.parcel().getId())
-                        .collect(Collectors.toSet());
-
+                        .map(p -> p.parcel().getId()).collect(Collectors.toSet());
                 remaining = remaining.stream()
                         .filter(p -> !packedIds.contains(p.getId()))
-                        .collect(Collectors.toList());
-            } else {
-                break;
+                        .toList();
             }
         }
         return new MultiVehiclePackingResult(results, remaining);

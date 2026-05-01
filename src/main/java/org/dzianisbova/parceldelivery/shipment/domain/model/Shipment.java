@@ -12,7 +12,6 @@ public class Shipment {
     private final UUID senderId;
     private String trackingNumber;
 
-
     private final Address pickupAddress;
     private final Address deliveryAddress;
     private final String recipient;
@@ -21,6 +20,7 @@ public class Shipment {
 
     private ShipmentStatus status;
     private final LocalDateTime createdAt;
+    private UUID vehicleId;
 
     public Shipment(UUID id,
                     String trackingNumber,
@@ -31,7 +31,7 @@ public class Shipment {
                     Parcel parcel,
                     LocalDateTime createdAt) {
         this(id, trackingNumber, senderId, pickupAddress, recipient,
-                deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt);
+                deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt, null);
     }
 
     public Shipment(UUID id,
@@ -42,17 +42,29 @@ public class Shipment {
                     Address deliveryAddress,
                     Parcel parcel,
                     ShipmentStatus status,
-                    LocalDateTime createdAt) {
+                    LocalDateTime createdAt,
+                    UUID vehicleId) {
         validate(trackingNumber, pickupAddress, recipient, deliveryAddress, parcel);
         this.id = id;
         this.trackingNumber = trackingNumber;
         this.senderId = senderId;
         this.pickupAddress = pickupAddress;
-        this.recipient = recipient;
         this.deliveryAddress = deliveryAddress;
+        this.recipient = recipient;
         this.parcel = parcel;
         this.status = status;
         this.createdAt = createdAt;
+        this.vehicleId = vehicleId;
+    }
+
+    public void confirm(UUID vehicleId) {
+        if (this.status != ShipmentStatus.PENDING) {
+            throw new IllegalStateException(
+                    "Cannot confirm shipment " + this.id + ": expected status PENDING but was " + this.status
+            );
+        }
+        this.status = ShipmentStatus.CONFIRMED;
+        this.vehicleId = vehicleId;
     }
 
     private void validate(String trackingNumber,

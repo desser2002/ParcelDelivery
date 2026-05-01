@@ -15,7 +15,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ShipmentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     private UUID id;
 
@@ -90,4 +89,7 @@ public class ShipmentEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "vehicle_id")
+    private UUID vehicleId;
 }

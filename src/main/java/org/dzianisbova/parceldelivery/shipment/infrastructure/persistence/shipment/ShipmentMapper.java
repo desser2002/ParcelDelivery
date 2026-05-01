@@ -48,7 +48,8 @@ class ShipmentMapper {
                 deliveryAddress,
                 parcel,
                 ShipmentStatus.valueOf(entity.getStatus()),
-                entity.getCreatedAt()
+                entity.getCreatedAt(),
+                entity.getVehicleId()
         );
     }
 
@@ -78,7 +79,8 @@ class ShipmentMapper {
                 shipment.getParcel().isFragile(),
                 shipment.getParcel().getPriority().name(),
                 shipment.getStatus().name(),
-                shipment.getCreatedAt()
+                shipment.getCreatedAt(),
+                shipment.getVehicleId()
         );
     }
 }
