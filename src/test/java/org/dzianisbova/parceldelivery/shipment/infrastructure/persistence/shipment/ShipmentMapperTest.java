@@ -28,7 +28,7 @@ class ShipmentMapperTest {
                 "Alice",
                 "Delivery Ave", "99D", "5D", "Krakow", "30-001", "DE",
                 PARCEL_ID, 10.0, 20.0, 30.0, 5.5, true, "EXPRESS", "IN_TRANSIT",
-                CREATED_AT
+                CREATED_AT, null
         );
 
         Shipment result = mapper.toDomain(entity);

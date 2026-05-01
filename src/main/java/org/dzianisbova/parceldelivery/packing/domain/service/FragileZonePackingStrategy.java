@@ -37,6 +37,7 @@ class FragileZonePackingStrategy implements PackingStrategy {
         this.policies = policies != null ? new ArrayList<>(policies) : new ArrayList<>();
     }
 
+    @Override
     public VehiclePackingResult pack(List<Parcel> parcels, Vehicle vehicle,
                                      List<ParcelPlacement> existingPlacements) {
         List<Parcel> sorted = sorter.sort(parcels);

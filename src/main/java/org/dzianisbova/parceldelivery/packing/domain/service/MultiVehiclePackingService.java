@@ -39,7 +39,7 @@ public class MultiVehiclePackingService {
                         .map(p -> p.parcel().getId()).collect(Collectors.toSet());
                 remaining = remaining.stream()
                         .filter(p -> !packedIds.contains(p.getId()))
-                        .collect(Collectors.toList());
+                        .toList();
             }
         }
 
