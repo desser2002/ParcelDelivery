@@ -35,3 +35,5 @@ build/
 ### Docs ###
 structure.md
 /refactoring-plan.md
+/docs/
+/.claude/settings.local.json
