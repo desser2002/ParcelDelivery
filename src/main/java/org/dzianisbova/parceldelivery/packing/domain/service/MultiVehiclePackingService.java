@@ -42,7 +42,6 @@ public class MultiVehiclePackingService {
                         .toList();
             }
         }
-
         return new MultiVehiclePackingResult(results, remaining);
     }
 

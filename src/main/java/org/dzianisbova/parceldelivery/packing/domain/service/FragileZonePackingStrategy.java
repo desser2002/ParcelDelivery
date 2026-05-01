@@ -54,14 +54,18 @@ class FragileZonePackingStrategy implements PackingStrategy {
             if (context.exceedsWeightLimit(parcel.getWeight())) {
                 continue;
             }
+
             PackingAlgorithm active = parcel.isFragile() ? fragileAlgorithm : algorithm;
+
             Position position = active.findPosition(parcel, context);
             if (position == null) {
                 continue;
             }
+
             if (policiesReject(parcel, position, context)) {
                 continue;
             }
+
             ParcelPlacement placement = new ParcelPlacement(parcel, position);
             context.addPlacement(placement);
             active.notifyPlaced(parcel, position);
