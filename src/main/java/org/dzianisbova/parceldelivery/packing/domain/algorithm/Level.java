@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Level {
+class Level {
     @Getter private final double startHeight;
     private final Dimensions containerBounds;
     private final List<ParcelPlacement> placements;

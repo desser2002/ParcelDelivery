@@ -5,16 +5,19 @@ import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.packing.domain.model.Position;
 import org.dzianisbova.parceldelivery.packing.domain.service.PackingContext;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopDownLevelAlgorithm implements PackingAlgorithm {
+@Component("fragileParcelAlgorithm")
+class TopDownLevelAlgorithm implements PackingAlgorithm {
     private final List<Level> levels = new ArrayList<>();
     private Dimensions vehicleDimensions;
 
     @Override
     public void initialize(PackingContext context) {
-        this.vehicleDimensions = context.getVehicle().getDimensions();
+        this.vehicleDimensions = context.getVehicle().dimensions();
         this.levels.clear();
     }
 

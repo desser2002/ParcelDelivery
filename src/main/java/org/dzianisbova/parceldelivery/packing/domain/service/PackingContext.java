@@ -21,13 +21,21 @@ public class PackingContext {
         this.currentWeight = 0.0;
     }
 
+    public PackingContext(Vehicle vehicle, List<ParcelPlacement> existingPlacements) {
+        this.vehicle = vehicle;
+        this.placedParcels = new ArrayList<>(existingPlacements);
+        this.currentWeight = existingPlacements.stream()
+                .mapToDouble(p -> p.parcel().getWeight())
+                .sum();
+    }
+
     public List<ParcelPlacement> getPlacedParcels() {
         return Collections.unmodifiableList(placedParcels);
     }
 
     public void addPlacement(ParcelPlacement placement) {
         placedParcels.add(placement);
-        currentWeight += placement.getParcel().getWeight();
+        currentWeight += placement.parcel().getWeight();
     }
 
     public List<ParcelPlacement> getFragileParcelsBelow(Position position, Dimensions dimensions) {
@@ -36,12 +44,12 @@ public class PackingContext {
         double bottomZ = position.z();
 
         for (ParcelPlacement placed : placedParcels) {
-            if (!placed.getParcel().isFragile()) {
+            if (!placed.parcel().isFragile()) {
                 continue;
             }
 
-            Position placedPos = placed.getPosition();
-            Dimensions placedDim = placed.getParcel().getDimensions();
+            Position placedPos = placed.position();
+            Dimensions placedDim = placed.parcel().getDimensions();
 
             if (placedPos.z() + placedDim.height() > bottomZ) {
                 continue;
@@ -60,8 +68,8 @@ public class PackingContext {
         double topZ = position.z() + dimensions.height();
 
         for (ParcelPlacement placed : placedParcels) {
-            Position placedPos = placed.getPosition();
-            Dimensions placedDim = placed.getParcel().getDimensions();
+            Position placedPos = placed.position();
+            Dimensions placedDim = placed.parcel().getDimensions();
 
             if (placedPos.z() < topZ) {
                 continue;
@@ -75,7 +83,7 @@ public class PackingContext {
     }
 
     public boolean exceedsWeightLimit(double weight) {
-        return currentWeight + weight > vehicle.getMaxWeight();
+        return currentWeight + weight > vehicle.maxWeight();
     }
 
     public boolean isSpaceOccupied(Position position, Dimensions dimensions) {
