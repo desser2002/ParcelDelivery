@@ -1,0 +1,5 @@
+-- liquibase formatted sql                                                                                                                                                                                                                                                                                                                                             
+-- changeset dzianis:009-expand-status-columns                                                                                                                                                                                                                                                                                                                         
+
+ALTER TABLE shipments       ALTER COLUMN status TYPE VARCHAR(40);
+ALTER TABLE tracking_events ALTER COLUMN type   TYPE VARCHAR(40);

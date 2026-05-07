@@ -1,10 +1,10 @@
 package org.dzianisbova.parceldelivery.shipment.domain.model;
 
-public enum ShipmentStatus  {
+public enum ShipmentStatus {
     PENDING,
     CONFIRMED,
-    PICKED_UP,
-    IN_TRANSIT,
+    ARRIVED_AT_SORTING_CENTER,
+    ASSIGNED_FOR_DELIVERY,
     DELIVERED,
     CANCELLED
 }

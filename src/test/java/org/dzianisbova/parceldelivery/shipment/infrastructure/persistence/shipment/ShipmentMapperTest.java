@@ -27,7 +27,7 @@ class ShipmentMapperTest {
                 "Pickup St", "1P", "10P", "Warsaw", "00-001", "PL",
                 "Alice",
                 "Delivery Ave", "99D", "5D", "Krakow", "30-001", "DE",
-                PARCEL_ID, 10.0, 20.0, 30.0, 5.5, true, "EXPRESS", "IN_TRANSIT",
+                PARCEL_ID, 10.0, 20.0, 30.0, 5.5, true, "EXPRESS", "ARRIVED_AT_SORTING_CENTER",
                 CREATED_AT, null
         );
 
@@ -57,7 +57,7 @@ class ShipmentMapperTest {
                 () -> assertEquals(5.5, result.getParcel().getWeight()),
                 () -> assertTrue(result.getParcel().isFragile()),
                 () -> assertEquals(Priority.EXPRESS, result.getParcel().getPriority()),
-                () -> assertEquals(ShipmentStatus.IN_TRANSIT, result.getStatus()),
+                () -> assertEquals(ShipmentStatus.ARRIVED_AT_SORTING_CENTER, result.getStatus()),
                 () -> assertEquals(CREATED_AT, result.getCreatedAt())
         );
     }

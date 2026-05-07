@@ -37,7 +37,7 @@ public class DispatchService {
 
     @Transactional
     public void dispatch() {
-        List<Shipment> pendingShipments = shipmentRepository.findAllByStatus(ShipmentStatus.PENDING);
+        List<Shipment> pendingShipments = shipmentRepository.findAllByStatus(ShipmentStatus.ARRIVED_AT_SORTING_CENTER);
 
         if (pendingShipments.isEmpty()) {
             log.debug("[DISPATCH] No pending shipments, skipping");
@@ -87,7 +87,7 @@ public class DispatchService {
             List<Shipment> confirmed = vehicleResult.placements().stream()
                     .map(p -> {
                         Shipment shipment = shipmentByParcelId.get(p.parcel().getId());
-                        shipment.confirm(vehicleId);
+                        shipment.assignForDelivery(vehicleId);
                         return shipment;
                     })
                     .toList();

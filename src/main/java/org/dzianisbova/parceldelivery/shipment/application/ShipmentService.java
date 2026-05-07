@@ -45,4 +45,15 @@ public class ShipmentService {
         return shipmentRepository.findByTrackingNumber(trackingNumber)
                 .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
     }
+
+    //TODO добавить метод в контроллер
+    @Transactional
+    public Shipment confirmShipment(String id) {
+        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
+                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
+
+        shipment.confirm();
+
+        return shipmentRepository.save(shipment);
+    }
 }

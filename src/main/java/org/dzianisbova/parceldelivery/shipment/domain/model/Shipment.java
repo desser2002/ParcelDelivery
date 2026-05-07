@@ -1,9 +1,16 @@
 package org.dzianisbova.parceldelivery.shipment.domain.model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentEvent;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -21,6 +28,9 @@ public class Shipment {
     private ShipmentStatus status;
     private final LocalDateTime createdAt;
     private UUID vehicleId;
+
+    @Getter(AccessLevel.NONE)
+    private final List<ShipmentEvent> events = new ArrayList<>();
 
     public Shipment(UUID id,
                     String trackingNumber,
@@ -57,14 +67,33 @@ public class Shipment {
         this.vehicleId = vehicleId;
     }
 
-    public void confirm(UUID vehicleId) {
+    public void confirm() {
         if (this.status != ShipmentStatus.PENDING) {
             throw new IllegalStateException(
                     "Cannot confirm shipment " + this.id + ": expected status PENDING but was " + this.status
             );
         }
         this.status = ShipmentStatus.CONFIRMED;
+        events.add(new ShipmentConfirmedEvent(id, Instant.now()));
+    }
+
+    public void assignForDelivery(UUID vehicleId) {
+        if (this.status != ShipmentStatus.ARRIVED_AT_SORTING_CENTER) {
+            throw new IllegalStateException(
+                    "Cannot assign for delivery shipment: " + id
+                            + " expected status ARRIVED_AT_SORTING_CENTER but get: " + this.status
+            );
+        }
+
+        this.status = ShipmentStatus.ASSIGNED_FOR_DELIVERY;
         this.vehicleId = vehicleId;
+        events.add(new ShipmentAssignedForDeliveryEvent(id, vehicleId, Instant.now()));
+    }
+
+    public List<ShipmentEvent> pullEvents() {
+        var copy = List.copyOf(events);
+        events.clear();
+        return copy;
     }
 
     private void validate(String trackingNumber,
