@@ -54,14 +54,16 @@ class ShipmentTest {
         @ValueSource(strings = {"   "})
         void rejectsBlankTrackingNumber(String trackingNumber) {
             assertThrows(IllegalArgumentException.class, () ->
-                    Shipment.create(ID, trackingNumber, null, anyAddress(), "Alice", anyAddress(), anyParcel(), CREATED_AT)
+                    Shipment.create(ID, trackingNumber, null,
+                            anyAddress(), "Alice", anyAddress(), anyParcel(), CREATED_AT)
             );
         }
 
         @Test
         void rejectsNullPickupAddress() {
             assertThrows(IllegalArgumentException.class, () ->
-                    Shipment.create(ID, TRACKING, null, null, "Alice", anyAddress(), anyParcel(), CREATED_AT)
+                    Shipment.create(ID, TRACKING, null,
+                            null, "Alice", anyAddress(), anyParcel(), CREATED_AT)
             );
         }
 

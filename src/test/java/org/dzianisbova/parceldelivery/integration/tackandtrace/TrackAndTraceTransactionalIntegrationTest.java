@@ -100,8 +100,8 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         String parcelId = UUID.randomUUID().toString();
         Dimensions parcelDimensions = new Dimensions(40, 20, 100);
         Parcel parcel = new Parcel(parcelId, parcelDimensions, 2.5);
-        Shipment shipment = shipmentService.createShipment(pickupAddress, "John Doe", deliveryAddress, parcel);
-        return shipment;
+        return shipmentService.createShipment(pickupAddress, "John Doe", deliveryAddress, parcel);
+
     }
 
     //TODO определить какое должно быть поведение при ошибке в shipment
