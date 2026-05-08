@@ -2,10 +2,7 @@ package org.dzianisbova.parceldelivery.shipment.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCanceledEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCreatedEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.*;
 import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEventType;
 import org.dzianisbova.parceldelivery.shipment.domain.port.TrackingEventRepository;
@@ -48,6 +45,13 @@ class TrackingEventProjector {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void on(ShipmentCanceledEvent e) {
         log.info("[TRACKING] CANCELED received for shipment {} ", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(),TrackingEventType.CANCELLED, e.occurredAt(), null));
+        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.CANCELLED, e.occurredAt(), null));
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentArrivedAtSortingCenterEvent e) {
+        log.info("[TRACKING] ArrivedAtSortingCenter received for shipment {} ", e.shipmentId());
+        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.ARRIVED_AT_SORTING_CENTER, e.occurredAt(), null));
     }
 }

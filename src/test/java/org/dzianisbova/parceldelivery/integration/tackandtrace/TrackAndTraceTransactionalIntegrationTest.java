@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresIntegrationTest {
+class TrackAndTraceTransactionalIntegrationTest extends BasePostgresIntegrationTest {
     @Autowired
     private ShipmentService shipmentService;
 
@@ -37,10 +37,10 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         @Test
         void shipmentConfirm_shouldSaveBoth_WhenNoError() {
             //given
-            Shipment shipment = createShipment();
+            String shipmentId = createShipment().getId().toString();
 
             //when
-            shipmentService.confirmShipment(shipment.getId().toString());
+            shipmentService.confirmShipment(shipmentId);
 
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
@@ -62,14 +62,27 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         @Test
         void shipmentCancel_shouldSaveBoth_WhenNoError() {
             //given
-            Shipment shipment = createShipment();
+            String shipmentId = createShipment().getId().toString();
 
             //when
-            shipmentService.cancelShipment(shipment.getId().toString());
+            shipmentService.cancelShipment(shipmentId);
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
             assertThat(trackingEventJpaRepository.findAll())
                     .filteredOn(e -> e.getType() == TrackingEventType.CANCELLED).hasSize(1);
+        }
+
+        @Test
+        void shipmentMarkArrived_shouldSaveBoth_WhenNoError() {
+            //given
+            String shipmentId = createShipment().getId().toString();
+            shipmentService.confirmShipment(shipmentId);
+            //when
+            shipmentService.markArrived(shipmentId);
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.ARRIVED_AT_SORTING_CENTER).hasSize(1);
         }
     }
 
@@ -81,11 +94,11 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         @Test
         void shipmentConfirm_shouldRollBackJustTrackAndTrace_WhenErrorAtEventProjector() {
             //given
-            Shipment shipment = createShipment();
+            String shipmentId = createShipment().getId().toString();
             when(trackingEventRepository.save(any())).thenThrow(new RuntimeException("Projector RuntimeException"));
 
             //when
-            shipmentService.confirmShipment(shipment.getId().toString());
+            shipmentService.confirmShipment(shipmentId);
 
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
@@ -108,11 +121,25 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         @Test
         void shipmentCanceled_shouldRollBackJustTrackAndTrace_WhenErrorAtEventProjector() {
             //given
-            Shipment shipment = createShipment();
+            String shipmentId = createShipment().getId().toString();
             when(trackingEventRepository.save(any())).thenThrow(new RuntimeException("Projector RuntimeException"));
 
             //when
-            shipment.cancel();
+            shipmentService.cancelShipment(shipmentId);
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CANCELLED).isEmpty();
+        }
+
+        @Test
+        void shipmentMarkArrived_shouldRollBackJustTrackAndTrace_WhenErrorAtEventProjector() {
+            //given
+            String shipmentId = createShipment().getId().toString();
+            when(trackingEventRepository.save(any())).thenThrow(new RuntimeException("Projector RuntimeException"));
+            shipmentService.confirmShipment(shipmentId);
+            //when
+            shipmentService.markArrived(shipmentId);
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
             assertThat(trackingEventJpaRepository.findAll())

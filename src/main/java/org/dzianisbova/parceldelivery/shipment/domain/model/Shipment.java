@@ -106,6 +106,18 @@ public class Shipment {
         events.add(new ShipmentCanceledEvent(id,Instant.now()));
     }
 
+    public void markArrived()
+    {
+        if (this.status != ShipmentStatus.CONFIRMED) {
+            throw new IllegalStateException(
+                    "Cannot markArriived shipment " + this.id + ": expected status CONFIRMED but was " + this.status
+            );
+        }
+
+        this.status=ShipmentStatus.ARRIVED_AT_SORTING_CENTER;
+        events.add(new ShipmentArrivedAtSortingCenterEvent(id,Instant.now()));
+    }
+
     public void assignForDelivery(UUID vehicleId) {
         if (this.status != ShipmentStatus.ARRIVED_AT_SORTING_CENTER) {
             throw new IllegalStateException(

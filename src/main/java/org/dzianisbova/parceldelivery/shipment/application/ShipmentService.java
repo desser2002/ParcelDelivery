@@ -46,6 +46,7 @@ public class ShipmentService {
                 .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
     }
 
+    //TODO возможно стоит сделать кастомное исключение
     //TODO добавить метод в контроллер
     @Transactional
     public Shipment confirmShipment(String id) {
@@ -63,6 +64,16 @@ public class ShipmentService {
                 new IllegalStateException("Shipment with id " + id + " doesn't exist"));
 
         shipment.cancel();
+
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment markArrived(String id) {
+        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
+                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
+
+        shipment.markArrived();
 
         return shipmentRepository.save(shipment);
     }
