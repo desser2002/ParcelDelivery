@@ -3,6 +3,7 @@ package org.dzianisbova.parceldelivery.shipment.application;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCanceledEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCreatedEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEvent;
@@ -37,10 +38,16 @@ class TrackingEventProjector {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void on(ShipmentCreatedEvent e)
-    {
+    public void on(ShipmentCreatedEvent e) {
         log.info("[TRACKING] CREATED received for shipment {} ", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(),TrackingEventType.CREATED,e.occurredAt(),null));
+        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.CREATED, e.occurredAt(), null));
     }
     //TODO решить что лучше null или перегрузка
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentCanceledEvent e) {
+        log.info("[TRACKING] CANCELED received for shipment {} ", e.shipmentId());
+        repository.save(TrackingEvent.of(e.shipmentId(),TrackingEventType.CANCELLED, e.occurredAt(), null));
+    }
 }

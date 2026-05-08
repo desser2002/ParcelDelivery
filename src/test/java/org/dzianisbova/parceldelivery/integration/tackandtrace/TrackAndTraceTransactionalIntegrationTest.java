@@ -58,6 +58,19 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
             assertThat(trackingEventJpaRepository.findAll())
                     .filteredOn(e -> e.getType() == TrackingEventType.CREATED).hasSize(1);
         }
+
+        @Test
+        void shipmentCancel_shouldSaveBoth_WhenNoError() {
+            //given
+            Shipment shipment = createShipment();
+
+            //when
+            shipmentService.cancelShipment(shipment.getId().toString());
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CANCELLED).hasSize(1);
+        }
     }
 
     @Nested
@@ -91,6 +104,20 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
             assertThat(trackingEventJpaRepository.findAll())
                     .filteredOn(e -> e.getType() == TrackingEventType.CREATED).isEmpty();
         }
+
+        @Test
+        void shipmentCanceled_shouldRollBackJustTrackAndTrace_WhenErrorAtEventProjector() {
+            //given
+            Shipment shipment = createShipment();
+            when(trackingEventRepository.save(any())).thenThrow(new RuntimeException("Projector RuntimeException"));
+
+            //when
+            shipment.cancel();
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CANCELLED).isEmpty();
+        }
     }
 
     private Shipment createShipment() {
@@ -101,7 +128,6 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
         Dimensions parcelDimensions = new Dimensions(40, 20, 100);
         Parcel parcel = new Parcel(parcelId, parcelDimensions, 2.5);
         return shipmentService.createShipment(pickupAddress, "John Doe", deliveryAddress, parcel);
-
     }
 
     //TODO определить какое должно быть поведение при ошибке в shipment

@@ -56,4 +56,14 @@ public class ShipmentService {
 
         return shipmentRepository.save(shipment);
     }
+
+    @Transactional
+    public Shipment cancelShipment(String id) {
+        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
+                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
+
+        shipment.cancel();
+
+        return shipmentRepository.save(shipment);
+    }
 }

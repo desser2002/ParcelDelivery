@@ -3,10 +3,7 @@ package org.dzianisbova.parceldelivery.shipment.domain.model;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCreatedEvent;
-import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -96,6 +93,19 @@ public class Shipment {
         events.add(new ShipmentConfirmedEvent(id, Instant.now()));
     }
 
+    public void cancel()
+    {
+        if(!(this.status==ShipmentStatus.PENDING||this.status==ShipmentStatus.CONFIRMED||this.status==ShipmentStatus.ARRIVED_AT_SORTING_CENTER))
+        {
+            throw new IllegalStateException(
+                    "Cannot cancel shipment " + this.id + ": expected status PENDING or CONFIRMED or ARRIVED_AT_SORTING_CENTER  but was " + this.status
+            );
+        }
+
+        this.status = ShipmentStatus.CANCELLED;
+        events.add(new ShipmentCanceledEvent(id,Instant.now()));
+    }
+
     public void assignForDelivery(UUID vehicleId) {
         if (this.status != ShipmentStatus.ARRIVED_AT_SORTING_CENTER) {
             throw new IllegalStateException(
@@ -108,6 +118,8 @@ public class Shipment {
         this.vehicleId = vehicleId;
         events.add(new ShipmentAssignedForDeliveryEvent(id, vehicleId, Instant.now()));
     }
+
+
 
     public List<ShipmentEvent> pullEvents() {
         var copy = List.copyOf(events);
