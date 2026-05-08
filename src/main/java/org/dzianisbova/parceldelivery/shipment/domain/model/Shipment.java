@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCreatedEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentEvent;
 
 import java.time.Instant;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class Shipment {
     private final UUID id;
     private final UUID senderId;
-    private String trackingNumber;
+    private final String trackingNumber;
 
     private final Address pickupAddress;
     private final Address deliveryAddress;
@@ -32,28 +33,16 @@ public class Shipment {
     @Getter(AccessLevel.NONE)
     private final List<ShipmentEvent> events = new ArrayList<>();
 
-    public Shipment(UUID id,
-                    String trackingNumber,
-                    UUID senderId,
-                    Address pickupAddress,
-                    String recipient,
-                    Address deliveryAddress,
-                    Parcel parcel,
-                    LocalDateTime createdAt) {
-        this(id, trackingNumber, senderId, pickupAddress, recipient,
-                deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt, null);
-    }
-
-    public Shipment(UUID id,
-                    String trackingNumber,
-                    UUID senderId,
-                    Address pickupAddress,
-                    String recipient,
-                    Address deliveryAddress,
-                    Parcel parcel,
-                    ShipmentStatus status,
-                    LocalDateTime createdAt,
-                    UUID vehicleId) {
+    private Shipment(UUID id,
+                     String trackingNumber,
+                     UUID senderId,
+                     Address pickupAddress,
+                     String recipient,
+                     Address deliveryAddress,
+                     Parcel parcel,
+                     ShipmentStatus status,
+                     LocalDateTime createdAt,
+                     UUID vehicleId) {
         validate(trackingNumber, pickupAddress, recipient, deliveryAddress, parcel);
         this.id = id;
         this.trackingNumber = trackingNumber;
@@ -65,6 +54,36 @@ public class Shipment {
         this.status = status;
         this.createdAt = createdAt;
         this.vehicleId = vehicleId;
+    }
+
+    // TODO скррее всего этот метод будет переделан под получение сущности из базы
+    public static Shipment create(UUID id,
+                                  String trackingNumber,
+                                  UUID senderId,
+                                  Address pickupAddress,
+                                  String recipient,
+                                  Address deliveryAddress,
+                                  Parcel parcel,
+                                  ShipmentStatus status,
+                                  LocalDateTime createdAt,
+                                  UUID vehicleId) {
+        return new Shipment(id, trackingNumber, senderId, pickupAddress, recipient,
+                deliveryAddress, parcel, status, createdAt, vehicleId);
+    }
+
+    public static Shipment create(UUID id,
+                                  String trackingNumber,
+                                  UUID senderId,
+                                  Address pickupAddress,
+                                  String recipient,
+                                  Address deliveryAddress,
+                                  Parcel parcel,
+                                  LocalDateTime createdAt) {
+        Shipment shipment = new Shipment(id, trackingNumber, senderId, pickupAddress, recipient,
+                deliveryAddress, parcel, ShipmentStatus.PENDING, createdAt, null);
+
+        shipment.events.add(new ShipmentCreatedEvent(shipment.id, Instant.now()));
+        return shipment;
     }
 
     public void confirm() {

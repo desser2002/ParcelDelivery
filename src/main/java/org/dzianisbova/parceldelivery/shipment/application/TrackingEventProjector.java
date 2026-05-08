@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentAssignedForDeliveryEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentConfirmedEvent;
+import org.dzianisbova.parceldelivery.shipment.domain.event.ShipmentCreatedEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEvent;
 import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEventType;
 import org.dzianisbova.parceldelivery.shipment.domain.port.TrackingEventRepository;
@@ -33,4 +34,13 @@ class TrackingEventProjector {
         repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.ASSIGNED_FOR_DELIVERY,
                 e.occurredAt(), e.vehicleId()));
     }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentCreatedEvent e)
+    {
+        log.info("[TRACKING] CREATED received for shipment {} ", e.shipmentId());
+        repository.save(TrackingEvent.of(e.shipmentId(),TrackingEventType.CREATED,e.occurredAt(),null));
+    }
+    //TODO решить что лучше null или перегрузка
 }

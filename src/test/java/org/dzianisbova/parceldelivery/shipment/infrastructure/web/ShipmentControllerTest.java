@@ -42,7 +42,7 @@ class ShipmentControllerTest {
             """;
 
     private static Shipment anyShipment(String trackingNumber) {
-        return new Shipment(
+        return  Shipment.create(
                 UUID.randomUUID(), trackingNumber, null,
                 new Address("Pickup St", "1", null, "Warsaw", "00-001", "PL"),
                 "Alice",

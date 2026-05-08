@@ -39,7 +39,7 @@ class ShipmentMapper {
                 Priority.valueOf(entity.getPriority())
         );
 
-        return new Shipment(
+        return  Shipment.create(
                 entity.getId(),
                 entity.getTrackingNumber(),
                 entity.getSenderId(),

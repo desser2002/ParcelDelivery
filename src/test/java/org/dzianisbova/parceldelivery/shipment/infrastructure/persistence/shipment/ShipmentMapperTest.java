@@ -64,7 +64,7 @@ class ShipmentMapperTest {
 
     @Test
     void toEntity_mapsAllFields() {
-        Shipment shipment = new Shipment(
+        Shipment shipment = Shipment.create(
                 ID, "TRACK123", SENDER_ID,
                 new Address("Pickup St", "1P", "10P", "Warsaw", "00-001", "PL"),
                 "Alice",

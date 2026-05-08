@@ -6,6 +6,7 @@ import org.dzianisbova.parceldelivery.integration.base.BasePostgresIntegrationTe
 import org.dzianisbova.parceldelivery.shipment.application.ShipmentService;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
+import org.dzianisbova.parceldelivery.shipment.domain.model.tracking.TrackingEventType;
 import org.dzianisbova.parceldelivery.shipment.domain.port.TrackingEventRepository;
 import org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment.ShipmentJpaRepository;
 import org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.tracking.TrackingEventJpaRepository;
@@ -43,7 +44,19 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
 
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
-            assertThat(trackingEventJpaRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CONFIRMED).hasSize(1);
+        }
+
+        @Test
+        void shipmentCreate_shouldSaveBoth_WhenNoError() {
+            //given//when
+            createShipment();
+
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CREATED).hasSize(1);
         }
     }
 
@@ -63,7 +76,20 @@ public class TrackAndTraceTransactionalIntegrationTest extends BasePostgresInteg
 
             //then
             assertThat(shipmentRepository.count()).isEqualTo(1);
-            assertThat(trackingEventJpaRepository.count()).isEqualTo(0);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CONFIRMED).isEmpty();
+        }
+
+        @Test
+        void shipmentCreate_shouldRollBackJustTrackAndTrace_WhenErrorAtEventProjector() {
+            //given//when
+            createShipment();
+            when(trackingEventRepository.save(any())).thenThrow(new RuntimeException("Projector RuntimeException"));
+
+            //then
+            assertThat(shipmentRepository.count()).isEqualTo(1);
+            assertThat(trackingEventJpaRepository.findAll())
+                    .filteredOn(e -> e.getType() == TrackingEventType.CREATED).isEmpty();
         }
     }
 

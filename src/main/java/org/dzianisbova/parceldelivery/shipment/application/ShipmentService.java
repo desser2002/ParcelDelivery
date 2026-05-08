@@ -25,7 +25,7 @@ public class ShipmentService {
                                    String recipient,
                                    Address deliveryAddress,
                                    Parcel parcel) {
-        Shipment shipment = new Shipment(
+        Shipment shipment = Shipment.create(
                 UUID.randomUUID(),
                 trackingNumberGenerator.generate(),
                 null,

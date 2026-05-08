@@ -33,7 +33,7 @@ class ShipmentTest {
         Address delivery = anyAddress();
         Parcel parcel = anyParcel();
 
-        Shipment shipment = new Shipment(ID, TRACKING, null, pickup, "Alice", delivery, parcel, CREATED_AT);
+        Shipment shipment = Shipment.create(ID, TRACKING, null, pickup, "Alice", delivery, parcel, CREATED_AT);
 
         assertAll(
                 () -> assertEquals(ID, shipment.getId()),
@@ -54,14 +54,14 @@ class ShipmentTest {
         @ValueSource(strings = {"   "})
         void rejectsBlankTrackingNumber(String trackingNumber) {
             assertThrows(IllegalArgumentException.class, () ->
-                    new Shipment(ID, trackingNumber, null, anyAddress(), "Alice", anyAddress(), anyParcel(), CREATED_AT)
+                    Shipment.create(ID, trackingNumber, null, anyAddress(), "Alice", anyAddress(), anyParcel(), CREATED_AT)
             );
         }
 
         @Test
         void rejectsNullPickupAddress() {
             assertThrows(IllegalArgumentException.class, () ->
-                    new Shipment(ID, TRACKING, null, null, "Alice", anyAddress(), anyParcel(), CREATED_AT)
+                    Shipment.create(ID, TRACKING, null, null, "Alice", anyAddress(), anyParcel(), CREATED_AT)
             );
         }
 
@@ -70,21 +70,21 @@ class ShipmentTest {
         @ValueSource(strings = {"   "})
         void rejectsBlankRecipient(String recipient) {
             assertThrows(IllegalArgumentException.class, () ->
-                    new Shipment(ID, TRACKING, null, anyAddress(), recipient, anyAddress(), anyParcel(), CREATED_AT)
+                    Shipment.create(ID, TRACKING, null, anyAddress(), recipient, anyAddress(), anyParcel(), CREATED_AT)
             );
         }
 
         @Test
         void rejectsNullDeliveryAddress() {
             assertThrows(IllegalArgumentException.class, () ->
-                    new Shipment(ID, TRACKING, null, anyAddress(), "Alice", null, anyParcel(), CREATED_AT)
+                    Shipment.create(ID, TRACKING, null, anyAddress(), "Alice", null, anyParcel(), CREATED_AT)
             );
         }
 
         @Test
         void rejectsNullParcel() {
             assertThrows(IllegalArgumentException.class, () ->
-                    new Shipment(ID, TRACKING, null, anyAddress(), "Alice", anyAddress(), null, CREATED_AT)
+                    Shipment.create(ID, TRACKING, null, anyAddress(), "Alice", anyAddress(), null, CREATED_AT)
             );
         }
     }
