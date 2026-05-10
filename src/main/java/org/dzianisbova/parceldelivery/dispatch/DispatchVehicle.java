@@ -1,11 +1,13 @@
 package org.dzianisbova.parceldelivery.dispatch;
 
+import lombok.Getter;
 import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 
 import java.util.UUID;
 
 public class DispatchVehicle {
+    @Getter
     private final Vehicle vehicle;
     private final double packedVolume;
 
@@ -15,15 +17,15 @@ public class DispatchVehicle {
     }
 
     UUID id() {
-        return vehicle.id();
+        return UUID.fromString(vehicle.getId());
     }
 
     Dimensions dimensions() {
-        return vehicle.dimensions();
+        return vehicle.getDimensions();
     }
 
     double maxWeight() {
-        return vehicle.maxWeight();
+        return vehicle.getMaxWeight();
     }
 
     public double packedVolume() {
@@ -31,11 +33,11 @@ public class DispatchVehicle {
     }
 
     double fillRatio() {
-        return packedVolume / vehicle.dimensions().volume();
+        return packedVolume / vehicle.getDimensions().volume();
     }
 
     String plateNumber() {
-        return vehicle.plateNumber();
+        return vehicle.getPlateNumber();
     }
 
     boolean isLoadComplete(double threshold) {

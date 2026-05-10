@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.dispatch.port.DispatchVehicleRepository;
 import org.dzianisbova.parceldelivery.dispatch.strategy.VehicleOrderingStrategy;
-import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.MultiVehiclePackingResult;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
@@ -72,7 +71,7 @@ public class DispatchService {
         MultiVehiclePackingResult result = packingService.packSequentially(
                 parcelsToPack,
                 availableVehicles.stream()
-                        .map(v -> new Vehicle(v.id(), v.plateNumber(), v.dimensions(), v.maxWeight()))
+                        .map(DispatchVehicle::getVehicle)
                         .toList(),
                 existingByVehicle);
         log.debug("[DISPATCH] Algorithm finished in {}ms", System.currentTimeMillis() - algorithmStartTime);

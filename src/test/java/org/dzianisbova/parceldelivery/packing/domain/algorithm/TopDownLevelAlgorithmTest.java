@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class TopDownLevelAlgorithmTest {
@@ -21,7 +19,7 @@ class TopDownLevelAlgorithmTest {
     @BeforeEach
     void setUp() {
         algorithm = new TopDownLevelAlgorithm();
-        context = new PackingContext(new Vehicle(UUID.randomUUID(), "V-1", new Dimensions(100, 100, 100), 1000.0));
+        context = new PackingContext(new Vehicle("WA12345", new Dimensions(100, 100, 100), 1000.0));
         algorithm.initialize(context);
     }
 
@@ -54,7 +52,7 @@ class TopDownLevelAlgorithmTest {
     class NewStartHeightBoundary {
         @Test
         void createsLevel_WhenNewStartHeightIsZero() {
-            context = new PackingContext(new Vehicle(UUID.randomUUID(), "V-2", new Dimensions(100, 100, 20), 1000.0));
+            context = new PackingContext(new Vehicle("WA12345", new Dimensions(100, 100, 20), 1000.0));
             algorithm.initialize(context);
 
             place(parcel(100, 100, 10));
@@ -67,7 +65,7 @@ class TopDownLevelAlgorithmTest {
 
         @Test
         void returnsNull_WhenNextLevelWouldGoBelowFloor() {
-            context = new PackingContext(new Vehicle(UUID.randomUUID(), "V-3", new Dimensions(100, 100, 15), 1000.0));
+            context = new PackingContext(new Vehicle("WA12345", new Dimensions(100, 100, 15), 1000.0));
             algorithm.initialize(context);
 
             place(parcel(100, 100, 10));

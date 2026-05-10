@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,7 @@ class PackingContextTest {
 
     @BeforeEach
     void setUp() {
-        Vehicle vehicle = new Vehicle(UUID.randomUUID(), "V-1", VEHICLE_DIM, MAX_WEIGHT);
+        Vehicle vehicle = new Vehicle("WA12345", VEHICLE_DIM, MAX_WEIGHT);
         context = new PackingContext(vehicle);
     }
 

@@ -23,25 +23,25 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
     @Override
     public List<DispatchVehicle> findAvailable() {
         return vehicleJpaRepository.findAllByStatus(VehicleStatus.AVAILABLE.name())
-                .stream()
-                .map(entity -> new DispatchVehicle(toVehicle(entity), entity.getPackedVolume()))
-                .toList();
+            .stream()
+            .map(entity -> new DispatchVehicle(toVehicle(entity), entity.getPackedVolume()))
+            .toList();
     }
 
     @Override
     public List<ParcelPlacement> findConfirmedPlacements(UUID vehicleId) {
         return placementJpaRepository.findPlacementsByVehicleId(vehicleId)
-                .stream()
-                .map(this::toParcelPlacement)
-                .toList();
+            .stream()
+            .map(this::toParcelPlacement)
+            .toList();
     }
 
     @Override
     public void savePlacements(UUID vehicleId, List<ParcelPlacement> placements,
                                Map<String, UUID> parcelIdToShipmentId) {
         List<PackingPlacementEntity> entities = placements.stream()
-                .map(p -> toEntity(vehicleId, p, parcelIdToShipmentId.get(p.parcel().getId())))
-                .toList();
+            .map(p -> toEntity(vehicleId, p, parcelIdToShipmentId.get(p.parcel().getId())))
+            .toList();
         placementJpaRepository.saveAll(entities);
     }
 
@@ -52,32 +52,34 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
 
     private Vehicle toVehicle(VehicleEntity entity) {
         return new Vehicle(
-                entity.getId(),
-                entity.getPlateNumber(),
-                new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
-                entity.getMaxWeight()
+            entity.getId().toString(),
+            entity.getPlateNumber(),
+            new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
+            entity.getMaxWeight(),
+            VehicleStatus.valueOf(entity.getStatus()),
+            entity.getPackedVolume()
         );
     }
 
     private ParcelPlacement toParcelPlacement(PackingPlacementView view) {
         Parcel parcel = new Parcel(
-                view.getParcelId().toString(),
-                new Dimensions(view.getLength(), view.getWidth(), view.getHeight()),
-                view.getWeight(),
-                view.isFragile(),
-                Priority.valueOf(view.getPriority())
+            view.getParcelId().toString(),
+            new Dimensions(view.getLength(), view.getWidth(), view.getHeight()),
+            view.getWeight(),
+            view.isFragile(),
+            Priority.valueOf(view.getPriority())
         );
         return new ParcelPlacement(parcel, new Position(view.getPosX(), view.getPosY(), view.getPosZ()));
     }
 
     private PackingPlacementEntity toEntity(UUID vehicleId, ParcelPlacement placement, UUID shipmentId) {
         return new PackingPlacementEntity(
-                UUID.randomUUID(),
-                vehicleId,
-                shipmentId,
-                placement.position().x(),
-                placement.position().y(),
-                placement.position().z()
+            UUID.randomUUID(),
+            vehicleId,
+            shipmentId,
+            placement.position().x(),
+            placement.position().y(),
+            placement.position().z()
         );
     }
 }

@@ -31,7 +31,8 @@ public class MultiVehiclePackingService {
                 break;
             }
 
-            List<ParcelPlacement> existing = existingByVehicle.getOrDefault(vehicle.id(), List.of());
+            List<ParcelPlacement> existing = existingByVehicle.getOrDefault(UUID.fromString(vehicle.getId()), List.of())
+            ;
             VehiclePackingResult result = packingStrategy.pack(remaining, vehicle, existing);
             if (!result.placements().isEmpty()) {
                 results.add(result);
