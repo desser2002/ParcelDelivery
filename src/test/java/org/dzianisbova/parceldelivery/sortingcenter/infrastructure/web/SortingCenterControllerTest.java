@@ -1,7 +1,7 @@
-package org.dzianisbova.parceldelivery.vehicle.infrastructure.web;
+package org.dzianisbova.parceldelivery.sortingcenter.infrastructure.web;
 
 import org.dzianisbova.parceldelivery.integration.base.BasePostgresIntegrationTest;
-import org.dzianisbova.parceldelivery.vehicle.infrastructure.persistence.VehicleJpaRepository;
+import org.dzianisbova.parceldelivery.sortingcenter.infrastructure.persistence.SortingCenterJpaRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,46 +16,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-class VehicleControllerTest extends BasePostgresIntegrationTest {
+class SortingCenterControllerTest extends BasePostgresIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private VehicleJpaRepository vehicleJpaRepository;
-
     private static final String VALID_REQUEST = """
         {
-        "plateNumber" : "WA12345",
-            "dimensions" :{ "length": 400.0, "width": 200.0, "height": 200.0 },
-            "maxWeight": 1000.0
+        "name": "Hub-Warsaw-01"
         }
         """;
+    @Autowired
+    private SortingCenterJpaRepository sortingCenterJpaRepository;
 
     @Test
-    void create_onValidRequest_saveVehicleToDB() throws Exception {
-        mockMvc.perform(post("/vehicles")
+    void create_onValidRequest_saveSortingCenterToDB() throws Exception {
+        mockMvc.perform(post("/sorting-center")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(VALID_REQUEST))
-            .andExpect(status().isCreated()
-            );
+            .andExpect(status().isCreated());
 
-        assertThat(vehicleJpaRepository.count()).isEqualTo(1);
+        assertThat(sortingCenterJpaRepository.count()).isEqualTo(1);
     }
 
     @Test
-    void create_inValidRequestEmpty_doNotSaveVehicleToDB() throws Exception {
-        mockMvc.perform(post("/vehicles")
+    void create_onInValidRequest_doNotSaveSortingCenterToDB() throws Exception {
+        mockMvc.perform(post("/sorting-center")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
-            .andExpect(status().isBadRequest()
-            );
+            .andExpect(status().isBadRequest());
 
-        assertThat(vehicleJpaRepository.count()).isZero();
+        assertThat(sortingCenterJpaRepository.count()).isZero();
     }
 
     @AfterEach
     void cleanUp()
     {
-        vehicleJpaRepository.deleteAll();
+        sortingCenterJpaRepository.deleteAll();
     }
 }
