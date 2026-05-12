@@ -1,4 +1,9 @@
 package org.dzianisbova.parceldelivery.sortingcenter.domain.model;
 
-public record SortingCenter(String id, String name) {
+import java.util.UUID;
+
+public record SortingCenter(UUID id, String name) {
+    public SortingCenter(String name) {
+        this(UUID.randomUUID(), name);
+    }
 }

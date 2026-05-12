@@ -26,14 +26,13 @@ public class ShipmentService {
                                    Address deliveryAddress,
                                    Parcel parcel) {
         Shipment shipment = Shipment.create(
-                UUID.randomUUID(),
-                trackingNumberGenerator.generate(),
-                null,
-                pickupAddress,
-                recipient,
-                deliveryAddress,
-                parcel,
-                LocalDateTime.now()
+            trackingNumberGenerator.generate(),
+            null,
+            pickupAddress,
+            recipient,
+            deliveryAddress,
+            parcel,
+            LocalDateTime.now()
         );
         Shipment saved = shipmentRepository.save(shipment);
         log.info("[SHIPMENT] Created tracking: {}", saved.getTrackingNumber());
@@ -43,38 +42,46 @@ public class ShipmentService {
     @Transactional(readOnly = true)
     public Shipment findByTrackingNumber(String trackingNumber) {
         return shipmentRepository.findByTrackingNumber(trackingNumber)
-                .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
+            .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
     }
 
-    //TODO возможно стоит сделать кастомное исключение
-    //TODO добавить метод в контроллер
     @Transactional
-    public Shipment confirmShipment(String id) {
-        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
-
+    public Shipment confirmShipment(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
         shipment.confirm();
-
         return shipmentRepository.save(shipment);
     }
 
     @Transactional
-    public Shipment cancelShipment(String id) {
-        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
-
+    public Shipment cancelShipment(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
         shipment.cancel();
-
         return shipmentRepository.save(shipment);
     }
 
     @Transactional
-    public Shipment markArrived(String id) {
-        Shipment shipment = shipmentRepository.findById(UUID.fromString(id)).orElseThrow(() ->
-                new IllegalStateException("Shipment with id " + id + " doesn't exist"));
-
-        shipment.markArrived();
-
+    public Shipment markArrived(UUID id, UUID sortingCenterId) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.markArrived(sortingCenterId);
         return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment assignForDelivery(UUID id, UUID vehicleId) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.assignForDelivery(vehicleId);
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment markDelivered(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.markDelivered();
+        return shipmentRepository.save(shipment);
+    }
+
+    private Shipment getShipmentOrThrow(UUID id) {
+        return shipmentRepository.findById(id).orElseThrow(() ->
+            new IllegalStateException("Shipment with id " + id + " doesn't exist"));
     }
 }

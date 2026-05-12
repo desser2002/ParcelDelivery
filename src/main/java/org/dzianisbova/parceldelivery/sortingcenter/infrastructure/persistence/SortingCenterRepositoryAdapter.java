@@ -15,4 +15,9 @@ public class SortingCenterRepositoryAdapter implements SortingCenterRepository {
     public SortingCenter save(SortingCenter sortingCenter) {
         return mapper.toDomain(sortingCenterJpaRepository.save(mapper.toEntity(sortingCenter)));
     }
+
+    @Override
+    public void deleteAll() {
+        sortingCenterJpaRepository.deleteAll();
+    }
 }

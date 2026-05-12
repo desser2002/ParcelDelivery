@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SortingCenterRepository {
     SortingCenter save(SortingCenter sortingCenter);
+
+    void deleteAll();
 }

@@ -20,38 +20,47 @@ class TrackingEventProjector {
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void on(ShipmentConfirmedEvent e) {
-        log.info("[TRACKING] CONFIRMED received for shipment {}", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.CONFIRMED, e.occurredAt(), null));
-    }
-
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void on(ShipmentAssignedForDeliveryEvent e) {
-        log.info("[TRACKING] ASSIGNED_FOR_DELIVERY received for shipment {} vehicle {}", e.shipmentId(), e.vehicleId());
-        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.ASSIGNED_FOR_DELIVERY,
-                e.occurredAt(), e.vehicleId()));
-    }
-
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void on(ShipmentCreatedEvent e) {
         log.info("[TRACKING] CREATED received for shipment {} ", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.CREATED, e.occurredAt(), null));
+        repository.save(TrackingEvent.generic(e.shipmentId(), TrackingEventType.CREATED, e.occurredAt()));
     }
-    //TODO решить что лучше null или перегрузка
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void on(ShipmentCanceledEvent e) {
-        log.info("[TRACKING] CANCELED received for shipment {} ", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.CANCELLED, e.occurredAt(), null));
+    public void on(ShipmentConfirmedEvent e) {
+        log.info("[TRACKING] CONFIRMED received for shipment {}", e.shipmentId());
+        repository.save(TrackingEvent.generic(e.shipmentId(), TrackingEventType.CONFIRMED, e.occurredAt()));
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void on(ShipmentArrivedAtSortingCenterEvent e) {
-        log.info("[TRACKING] ArrivedAtSortingCenter received for shipment {} ", e.shipmentId());
-        repository.save(TrackingEvent.of(e.shipmentId(), TrackingEventType.ARRIVED_AT_SORTING_CENTER, e.occurredAt(), null));
+        log.info("[TRACKING] ArrivedAtSortingCenter received for shipment {} sortingCenter {}",
+            e.shipmentId(), e.sortingCenterId());
+        repository.save(TrackingEvent.withSortingCenter(e.shipmentId(),
+            TrackingEventType.ARRIVED_AT_SORTING_CENTER, e.occurredAt(), e.sortingCenterId()));
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentAssignedForDeliveryEvent e) {
+        log.info("[TRACKING] ASSIGNED_FOR_DELIVERY received for shipment {} vehicle {}",
+            e.shipmentId(), e.vehicleId());
+        repository.save(TrackingEvent.withVehicle(e.shipmentId(),
+            TrackingEventType.ASSIGNED_FOR_DELIVERY, e.occurredAt(), e.vehicleId()));
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentDeliveredEvent e) {
+        log.info("[TRACKING] DELIVERED received for shipment {} ", e.shipmentId());
+        repository.save(TrackingEvent.generic(e.shipmentId(), TrackingEventType.DELIVERED, e.occurredAt()));
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void on(ShipmentCanceledEvent e) {
+        log.info("[TRACKING] CANCELED received for shipment {} ", e.shipmentId());
+        repository.save(TrackingEvent.generic(e.shipmentId(), TrackingEventType.CANCELLED, e.occurredAt()));
     }
 }

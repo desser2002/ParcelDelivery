@@ -4,7 +4,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 public sealed interface ShipmentEvent permits ShipmentCreatedEvent, ShipmentConfirmedEvent,
-        ShipmentArrivedAtSortingCenterEvent, ShipmentAssignedForDeliveryEvent, ShipmentCanceledEvent {
+        ShipmentArrivedAtSortingCenterEvent, ShipmentAssignedForDeliveryEvent,
+        ShipmentDeliveredEvent, ShipmentCanceledEvent {
     UUID shipmentId();
 
     Instant occurredAt();

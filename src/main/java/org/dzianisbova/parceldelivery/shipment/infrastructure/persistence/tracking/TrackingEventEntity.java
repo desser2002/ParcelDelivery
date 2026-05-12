@@ -17,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TrackingEventEntity {
     @Id
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private UUID id;
 
     @Column(name = "shipment_id", nullable = false)
@@ -33,7 +33,9 @@ public class TrackingEventEntity {
     @Column(name = "actor_id")
     private UUID actorId;
 
-
     @Column(name = "vehicle_id")
     private UUID vehicleId;
+
+    @Column(name = "sorting_center_id")
+    private UUID sortingCenterId;
 }
