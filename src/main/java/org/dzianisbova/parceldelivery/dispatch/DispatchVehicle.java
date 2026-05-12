@@ -17,7 +17,7 @@ public class DispatchVehicle {
     }
 
     UUID id() {
-        return UUID.fromString(vehicle.getId());
+        return vehicle.getId();
     }
 
     Dimensions dimensions() {

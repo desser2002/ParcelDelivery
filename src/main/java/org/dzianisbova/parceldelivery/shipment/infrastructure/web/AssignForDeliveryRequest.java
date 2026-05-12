@@ -1,4 +1,6 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.web;
 
-public record AssignForDeliveryRequest(String vehicleId) {
+import java.util.UUID;
+
+public record AssignForDeliveryRequest(UUID vehicleId) {
 }

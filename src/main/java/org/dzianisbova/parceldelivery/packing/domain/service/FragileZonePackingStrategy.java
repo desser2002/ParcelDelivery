@@ -11,7 +11,6 @@ import org.dzianisbova.parceldelivery.packing.domain.policy.PackingPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 class FragileZonePackingStrategy implements PackingStrategy {
     private final PackingAlgorithm algorithm;
@@ -69,7 +68,7 @@ class FragileZonePackingStrategy implements PackingStrategy {
             newPlacements.add(placement);
         }
 
-        return new VehiclePackingResult(UUID.fromString(vehicle.getId()), newPlacements);
+        return new VehiclePackingResult(vehicle.getId(), newPlacements);
     }
 
     private boolean policiesReject(Parcel parcel, Position position, PackingContext context) {

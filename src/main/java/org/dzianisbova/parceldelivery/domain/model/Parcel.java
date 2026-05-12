@@ -3,17 +3,19 @@ package org.dzianisbova.parceldelivery.domain.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Parcel {
-    private final String id;
+    private final UUID id;
     private final Dimensions dimensions;
     private final double weight;
     private final boolean fragile;
     private final Priority priority;
 
-    public Parcel(String id, Dimensions dimensions, double weight, boolean fragile, Priority priority) {
-        if (id == null || id.isBlank()) {
+    public Parcel(UUID id, Dimensions dimensions, double weight, boolean fragile, Priority priority) {
+        if (id == null) {
             throw new IllegalArgumentException("Package id cannot be empty");
         }
         if (dimensions == null) {
@@ -32,8 +34,12 @@ public class Parcel {
         this.priority = priority;
     }
 
-    public Parcel(String id, Dimensions dimensions, double weight) {
-        this(id, dimensions, weight, false, Priority.STANDARD);
+    public Parcel(Dimensions dimensions, double weight) {
+        this(UUID.randomUUID(), dimensions, weight, false, Priority.STANDARD);
+    }
+
+    public Parcel(Dimensions dimensions, double weight, boolean fragile, Priority priority) {
+        this(UUID.randomUUID(), dimensions, weight, fragile, priority);
     }
 
     public boolean isPriority() {

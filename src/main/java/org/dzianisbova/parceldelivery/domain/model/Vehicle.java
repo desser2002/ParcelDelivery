@@ -6,14 +6,14 @@ import java.util.UUID;
 
 @Getter
 public class Vehicle {
-    private final String id;
+    private final UUID id;
     private final String plateNumber;
     private final Dimensions dimensions;
     private final double maxWeight;
     private final VehicleStatus status;
     private final double packedVolume;
 
-    public Vehicle(String id, String plateNumber, Dimensions dimensions,
+    public Vehicle(UUID id, String plateNumber, Dimensions dimensions,
                    double maxWeight, VehicleStatus status, double packedVolume) {
         this.id = id;
         this.plateNumber = plateNumber;
@@ -25,7 +25,7 @@ public class Vehicle {
     }
 
     public Vehicle(String plateNumber, Dimensions dimensions, double maxWeight) {
-        this(UUID.randomUUID().toString(), plateNumber, dimensions, maxWeight, VehicleStatus.AVAILABLE, 0);
+        this(UUID.randomUUID(), plateNumber, dimensions, maxWeight, VehicleStatus.AVAILABLE, 0);
     }
 
     private void verify() {

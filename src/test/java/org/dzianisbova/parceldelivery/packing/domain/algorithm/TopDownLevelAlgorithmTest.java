@@ -100,6 +100,6 @@ class TopDownLevelAlgorithmTest {
     }
 
     private Parcel parcel(double length, double width, double height) {
-        return new Parcel("P", new Dimensions(length, width, height), 5.0);
+        return new Parcel(new Dimensions(length, width, height), 5.0);
     }
 }

@@ -53,7 +53,7 @@ public class DispatchService {
         log.info("[DISPATCH] Start — pending: {}, vehicles: {}", pendingShipments.size(), availableVehicles.size());
         long dispatchStartTime = System.currentTimeMillis();
 
-        Map<String, Shipment> shipmentByParcelId = pendingShipments.stream()
+        Map<UUID, Shipment> shipmentByParcelId = pendingShipments.stream()
                 .collect(Collectors.toMap(s -> s.getParcel().getId(), s -> s));
 
         var parcelsToPack = pendingShipments.stream()
@@ -92,7 +92,7 @@ public class DispatchService {
                     .toList();
             shipmentRepository.saveAll(confirmed);
 
-            Map<String, UUID> parcelIdToShipmentId = confirmed.stream()
+            Map<UUID, UUID> parcelIdToShipmentId = confirmed.stream()
                     .collect(Collectors.toMap(s -> s.getParcel().getId(), Shipment::getId));
             dispatchVehicleRepository.savePlacements(vehicleId, vehicleResult.placements(), parcelIdToShipmentId);
 

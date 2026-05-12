@@ -1,4 +1,6 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.web;
 
-public record MarkArrivedRequest(String sortingCenterId) {
+import java.util.UUID;
+
+public record MarkArrivedRequest(UUID sortingCenterId) {
 }

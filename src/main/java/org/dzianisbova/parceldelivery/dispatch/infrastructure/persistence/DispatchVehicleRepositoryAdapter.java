@@ -38,7 +38,7 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
 
     @Override
     public void savePlacements(UUID vehicleId, List<ParcelPlacement> placements,
-                               Map<String, UUID> parcelIdToShipmentId) {
+                               Map<UUID, UUID> parcelIdToShipmentId) {
         List<PackingPlacementEntity> entities = placements.stream()
             .map(p -> toEntity(vehicleId, p, parcelIdToShipmentId.get(p.parcel().getId())))
             .toList();
@@ -52,7 +52,7 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
 
     private Vehicle toVehicle(VehicleEntity entity) {
         return new Vehicle(
-            entity.getId().toString(),
+            entity.getId(),
             entity.getPlateNumber(),
             new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
             entity.getMaxWeight(),
@@ -63,7 +63,7 @@ class DispatchVehicleRepositoryAdapter implements DispatchVehicleRepository {
 
     private ParcelPlacement toParcelPlacement(PackingPlacementView view) {
         Parcel parcel = new Parcel(
-            view.getParcelId().toString(),
+            view.getParcelId(),
             new Dimensions(view.getLength(), view.getWidth(), view.getHeight()),
             view.getWeight(),
             view.isFragile(),

@@ -76,10 +76,10 @@ class FragilePolicyTest {
     }
 
     private Parcel standardParcel() {
-        return new Parcel("P-std", DIM_10x10x10, 5.0, false, Priority.STANDARD);
+        return new Parcel( DIM_10x10x10, 5.0, false, Priority.STANDARD);
     }
 
     private Parcel fragileParcel() {
-        return new Parcel("P-fr", DIM_10x10x10, 5.0, true, Priority.STANDARD);
+        return new Parcel(DIM_10x10x10, 5.0, true, Priority.STANDARD);
     }
 }

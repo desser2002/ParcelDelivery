@@ -12,7 +12,7 @@ public interface DispatchVehicleRepository {
 
     List<ParcelPlacement> findConfirmedPlacements(UUID vehicleId);
 
-    void savePlacements(UUID vehicleId, List<ParcelPlacement> placements, Map<String, UUID> parcelIdToShipmentId);
+    void savePlacements(UUID vehicleId, List<ParcelPlacement> placements, Map<UUID, UUID> parcelIdToShipmentId);
 
     void deletePlacements(UUID vehicleId);
 }

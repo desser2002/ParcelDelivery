@@ -5,13 +5,11 @@ import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.domain.model.VehicleStatus;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 class VehicleMapper {
     public Vehicle toDomain(VehicleEntity entity) {
         return new Vehicle(
-                entity.getId().toString(),
+                entity.getId(),
                 entity.getPlateNumber(),
                 new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
                 entity.getMaxWeight(),
@@ -21,7 +19,7 @@ class VehicleMapper {
     }
 
     public VehicleEntity toEntity(Vehicle vehicle) {
-        return new VehicleEntity(UUID.fromString(vehicle.getId()),
+        return new VehicleEntity(vehicle.getId(),
                 vehicle.getPlateNumber(),
                 vehicle.getDimensions().length(),
                 vehicle.getDimensions().width(),

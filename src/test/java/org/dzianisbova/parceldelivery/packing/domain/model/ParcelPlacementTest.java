@@ -64,7 +64,7 @@ class ParcelPlacementTest {
     }
 
     private ParcelPlacement createPlacement(Position position) {
-        Parcel parcel = new Parcel("P1", STANDARD_DIMENSIONS, 5);
+        Parcel parcel = new Parcel(STANDARD_DIMENSIONS, 5);
         return new ParcelPlacement(parcel, position);
     }
 }
