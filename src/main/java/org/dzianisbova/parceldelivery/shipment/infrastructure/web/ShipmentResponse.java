@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-class ShipmentResponse {
+public class ShipmentResponse {
     private UUID id;
     private String trackingNumber;
     private String status;

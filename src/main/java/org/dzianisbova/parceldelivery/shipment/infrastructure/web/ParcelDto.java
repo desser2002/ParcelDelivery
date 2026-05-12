@@ -8,8 +8,6 @@ import org.dzianisbova.parceldelivery.domain.model.Dimensions;
 import org.dzianisbova.parceldelivery.domain.model.Parcel;
 import org.dzianisbova.parceldelivery.domain.model.Priority;
 
-import java.util.UUID;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
 class ParcelDto {
@@ -31,15 +29,14 @@ class ParcelDto {
 
     Parcel toDomain() {
         Priority parcelPriority = priority != null
-                ? Priority.valueOf(priority)
-                : Priority.STANDARD;
+            ? Priority.valueOf(priority)
+            : Priority.STANDARD;
 
         return new Parcel(
-                UUID.randomUUID().toString(),
-                new Dimensions(length, width, height),
-                weight,
-                fragile,
-                parcelPriority
+            new Dimensions(length, width, height),
+            weight,
+            fragile,
+            parcelPriority
         );
     }
 }

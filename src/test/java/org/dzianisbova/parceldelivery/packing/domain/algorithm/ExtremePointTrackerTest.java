@@ -74,7 +74,7 @@ class ExtremePointTrackerTest {
     }
 
     private ParcelPlacement placement(Position position, Dimensions dimensions) {
-        Parcel parcel = new Parcel("P-test", dimensions, 5.0);
+        Parcel parcel = new Parcel( dimensions, 5.0);
         return new ParcelPlacement(parcel, position);
     }
 }

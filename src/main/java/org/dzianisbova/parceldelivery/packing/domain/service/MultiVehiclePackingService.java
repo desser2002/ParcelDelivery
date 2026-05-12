@@ -31,11 +31,12 @@ public class MultiVehiclePackingService {
                 break;
             }
 
-            List<ParcelPlacement> existing = existingByVehicle.getOrDefault(vehicle.id(), List.of());
+            List<ParcelPlacement> existing = existingByVehicle.getOrDefault(vehicle.getId(), List.of())
+            ;
             VehiclePackingResult result = packingStrategy.pack(remaining, vehicle, existing);
             if (!result.placements().isEmpty()) {
                 results.add(result);
-                Set<String> packedIds = result.placements().stream()
+                Set<UUID> packedIds = result.placements().stream()
                         .map(p -> p.parcel().getId()).collect(Collectors.toSet());
                 remaining = remaining.stream()
                         .filter(p -> !packedIds.contains(p.getId()))

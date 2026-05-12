@@ -25,15 +25,14 @@ public class ShipmentService {
                                    String recipient,
                                    Address deliveryAddress,
                                    Parcel parcel) {
-        Shipment shipment = new Shipment(
-                UUID.randomUUID(),
-                trackingNumberGenerator.generate(),
-                null,
-                pickupAddress,
-                recipient,
-                deliveryAddress,
-                parcel,
-                LocalDateTime.now()
+        Shipment shipment = Shipment.create(
+            trackingNumberGenerator.generate(),
+            null,
+            pickupAddress,
+            recipient,
+            deliveryAddress,
+            parcel,
+            LocalDateTime.now()
         );
         Shipment saved = shipmentRepository.save(shipment);
         log.info("[SHIPMENT] Created tracking: {}", saved.getTrackingNumber());
@@ -43,6 +42,46 @@ public class ShipmentService {
     @Transactional(readOnly = true)
     public Shipment findByTrackingNumber(String trackingNumber) {
         return shipmentRepository.findByTrackingNumber(trackingNumber)
-                .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
+            .orElseThrow(() -> new ShipmentNotFoundException(trackingNumber));
+    }
+
+    @Transactional
+    public Shipment confirmShipment(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.confirm();
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment cancelShipment(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.cancel();
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment markArrived(UUID id, UUID sortingCenterId) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.markArrived(sortingCenterId);
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment assignForDelivery(UUID id, UUID vehicleId) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.assignForDelivery(vehicleId);
+        return shipmentRepository.save(shipment);
+    }
+
+    @Transactional
+    public Shipment markDelivered(UUID id) {
+        Shipment shipment = getShipmentOrThrow(id);
+        shipment.markDelivered();
+        return shipmentRepository.save(shipment);
+    }
+
+    private Shipment getShipmentOrThrow(UUID id) {
+        return shipmentRepository.findById(id).orElseThrow(() ->
+            new IllegalStateException("Shipment with id " + id + " doesn't exist"));
     }
 }

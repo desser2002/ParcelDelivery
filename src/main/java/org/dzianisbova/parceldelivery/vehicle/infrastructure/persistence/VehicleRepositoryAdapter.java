@@ -6,7 +6,6 @@ import org.dzianisbova.parceldelivery.domain.model.VehicleStatus;
 import org.dzianisbova.parceldelivery.vehicle.domain.port.VehicleRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,11 +15,8 @@ class VehicleRepositoryAdapter implements VehicleRepository {
     private final VehicleMapper mapper;
 
     @Override
-    public List<Vehicle> findAvailable() {
-        return jpaRepository.findAllByStatus(VehicleStatus.AVAILABLE.name())
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
+    public Vehicle save(Vehicle vehicle) {
+        return mapper.toDomain(jpaRepository.save(mapper.toEntity(vehicle)));
     }
 
     @Override
@@ -34,5 +30,10 @@ class VehicleRepositoryAdapter implements VehicleRepository {
             throw new IllegalArgumentException("Added volume must be positive, got: " + addedVolume);
         }
         jpaRepository.addPackedVolume(vehicleId, addedVolume);
+    }
+
+    @Override
+    public void deleteAll() {
+        jpaRepository.deleteAll();
     }
 }

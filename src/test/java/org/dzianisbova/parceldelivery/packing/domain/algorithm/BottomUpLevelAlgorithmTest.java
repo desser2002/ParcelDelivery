@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BottomUpLevelAlgorithmTest {
@@ -21,7 +19,7 @@ class BottomUpLevelAlgorithmTest {
     @BeforeEach
     void setUp() {
         algorithm = new BottomUpLevelAlgorithm();
-        context = new PackingContext(new Vehicle(UUID.randomUUID(), "V-1", new Dimensions(100, 100, 100), 1000.0));
+        context = new PackingContext(new Vehicle("WA12345", new Dimensions(100, 100, 100), 1000.0));
         algorithm.initialize(context);
     }
 
@@ -95,6 +93,6 @@ class BottomUpLevelAlgorithmTest {
     }
 
     private Parcel parcel(double length, double width, double height) {
-        return new Parcel("P", new Dimensions(length, width, height), 5.0);
+        return new Parcel(new Dimensions(length, width, height), 5.0);
     }
 }

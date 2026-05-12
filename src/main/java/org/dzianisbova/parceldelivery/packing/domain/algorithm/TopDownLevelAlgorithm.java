@@ -17,7 +17,7 @@ class TopDownLevelAlgorithm implements PackingAlgorithm {
 
     @Override
     public void initialize(PackingContext context) {
-        this.vehicleDimensions = context.getVehicle().dimensions();
+        this.vehicleDimensions = context.getVehicle().getDimensions();
         this.levels.clear();
     }
 

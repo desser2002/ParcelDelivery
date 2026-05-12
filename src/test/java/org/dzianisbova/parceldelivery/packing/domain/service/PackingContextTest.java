@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +21,7 @@ class PackingContextTest {
 
     @BeforeEach
     void setUp() {
-        Vehicle vehicle = new Vehicle(UUID.randomUUID(), "V-1", VEHICLE_DIM, MAX_WEIGHT);
+        Vehicle vehicle = new Vehicle("WA12345", VEHICLE_DIM, MAX_WEIGHT);
         context = new PackingContext(vehicle);
     }
 
@@ -177,14 +176,14 @@ class PackingContextTest {
     }
 
     private Parcel parcel(double weight) {
-        return new Parcel("P-" + weight, new Dimensions(10, 10, 10), weight);
+        return new Parcel(new Dimensions(10, 10, 10), weight);
     }
 
     private Parcel standardParcel(double weight) {
-        return new Parcel("P-std-" + weight, new Dimensions(10, 10, 10), weight, false, Priority.STANDARD);
+        return new Parcel(new Dimensions(10, 10, 10), weight, false, Priority.STANDARD);
     }
 
     private Parcel fragileParcel(double weight) {
-        return new Parcel("P-fr-" + weight, new Dimensions(10, 10, 10), weight, true, Priority.STANDARD);
+        return new Parcel(new Dimensions(10, 10, 10), weight, true, Priority.STANDARD);
     }
 }

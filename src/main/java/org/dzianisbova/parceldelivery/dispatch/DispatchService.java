@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dzianisbova.parceldelivery.dispatch.port.DispatchVehicleRepository;
 import org.dzianisbova.parceldelivery.dispatch.strategy.VehicleOrderingStrategy;
-import org.dzianisbova.parceldelivery.domain.model.Vehicle;
 import org.dzianisbova.parceldelivery.packing.domain.model.MultiVehiclePackingResult;
 import org.dzianisbova.parceldelivery.packing.domain.model.ParcelPlacement;
 import org.dzianisbova.parceldelivery.packing.domain.model.VehiclePackingResult;
@@ -37,7 +36,7 @@ public class DispatchService {
 
     @Transactional
     public void dispatch() {
-        List<Shipment> pendingShipments = shipmentRepository.findAllByStatus(ShipmentStatus.PENDING);
+        List<Shipment> pendingShipments = shipmentRepository.findAllByStatus(ShipmentStatus.ARRIVED_AT_SORTING_CENTER);
 
         if (pendingShipments.isEmpty()) {
             log.debug("[DISPATCH] No pending shipments, skipping");
@@ -54,7 +53,7 @@ public class DispatchService {
         log.info("[DISPATCH] Start — pending: {}, vehicles: {}", pendingShipments.size(), availableVehicles.size());
         long dispatchStartTime = System.currentTimeMillis();
 
-        Map<String, Shipment> shipmentByParcelId = pendingShipments.stream()
+        Map<UUID, Shipment> shipmentByParcelId = pendingShipments.stream()
                 .collect(Collectors.toMap(s -> s.getParcel().getId(), s -> s));
 
         var parcelsToPack = pendingShipments.stream()
@@ -72,7 +71,7 @@ public class DispatchService {
         MultiVehiclePackingResult result = packingService.packSequentially(
                 parcelsToPack,
                 availableVehicles.stream()
-                        .map(v -> new Vehicle(v.id(), v.plateNumber(), v.dimensions(), v.maxWeight()))
+                        .map(DispatchVehicle::getVehicle)
                         .toList(),
                 existingByVehicle);
         log.debug("[DISPATCH] Algorithm finished in {}ms", System.currentTimeMillis() - algorithmStartTime);
@@ -87,13 +86,13 @@ public class DispatchService {
             List<Shipment> confirmed = vehicleResult.placements().stream()
                     .map(p -> {
                         Shipment shipment = shipmentByParcelId.get(p.parcel().getId());
-                        shipment.confirm(vehicleId);
+                        shipment.assignForDelivery(vehicleId);
                         return shipment;
                     })
                     .toList();
             shipmentRepository.saveAll(confirmed);
 
-            Map<String, UUID> parcelIdToShipmentId = confirmed.stream()
+            Map<UUID, UUID> parcelIdToShipmentId = confirmed.stream()
                     .collect(Collectors.toMap(s -> s.getParcel().getId(), Shipment::getId));
             dispatchVehicleRepository.savePlacements(vehicleId, vehicleResult.placements(), parcelIdToShipmentId);
 

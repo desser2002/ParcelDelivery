@@ -117,6 +117,6 @@ class LevelTest {
     }
 
     private Parcel parcel(double length, double width, double height) {
-        return new Parcel("P-test", new Dimensions(length, width, height), DEFAULT_WEIGHT);
+        return new Parcel(new Dimensions(length, width, height), DEFAULT_WEIGHT);
     }
 }

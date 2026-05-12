@@ -11,9 +11,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class PackingContext {
-    @Getter private final Vehicle vehicle;
+    @Getter
+    private final Vehicle vehicle;
     private final List<ParcelPlacement> placedParcels;
-    @Getter private double currentWeight;
+    @Getter
+    private double currentWeight;
 
     public PackingContext(Vehicle vehicle) {
         this.vehicle = vehicle;
@@ -25,8 +27,8 @@ public class PackingContext {
         this.vehicle = vehicle;
         this.placedParcels = new ArrayList<>(existingPlacements);
         this.currentWeight = existingPlacements.stream()
-                .mapToDouble(p -> p.parcel().getWeight())
-                .sum();
+            .mapToDouble(p -> p.parcel().getWeight())
+            .sum();
     }
 
     public List<ParcelPlacement> getPlacedParcels() {
@@ -43,19 +45,16 @@ public class PackingContext {
 
         double bottomZ = position.z();
 
-        for (ParcelPlacement placed : placedParcels) {
-            if (!placed.parcel().isFragile()) {
-                continue;
-            }
-
+        for (ParcelPlacement placed : placedParcels)
+        {
             Position placedPos = placed.position();
             Dimensions placedDim = placed.parcel().getDimensions();
 
-            if (placedPos.z() + placedDim.height() > bottomZ) {
-                continue;
-            }
+            boolean qualifies = placed.parcel().isFragile()
+                && placedPos.z() + placedDim.height() <= bottomZ
+                && hasXYOverlap(placedPos, placedDim, position, dimensions);
 
-            if (hasXYOverlap(placedPos, placedDim, position, dimensions)) {
+            if (qualifies) {
                 below.add(placed);
             }
         }
@@ -83,7 +82,7 @@ public class PackingContext {
     }
 
     public boolean exceedsWeightLimit(double weight) {
-        return currentWeight + weight > vehicle.maxWeight();
+        return currentWeight + weight > vehicle.getMaxWeight();
     }
 
     public boolean isSpaceOccupied(Position position, Dimensions dimensions) {
@@ -96,12 +95,12 @@ public class PackingContext {
     }
 
     private boolean hasXYOverlap(Position placedPos, Dimensions placedDim,
-                                  Position targetPos, Dimensions targetDim) {
+                                 Position targetPos, Dimensions targetDim) {
         boolean overlapX = placedPos.x() < targetPos.x() + targetDim.length() &&
-                placedPos.x() + placedDim.length() > targetPos.x();
+            placedPos.x() + placedDim.length() > targetPos.x();
 
         boolean overlapY = placedPos.y() < targetPos.y() + targetDim.width() &&
-                placedPos.y() + placedDim.width() > targetPos.y();
+            placedPos.y() + placedDim.width() > targetPos.y();
 
         return overlapX && overlapY;
     }

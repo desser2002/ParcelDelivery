@@ -10,8 +10,6 @@ import org.dzianisbova.parceldelivery.packing.domain.service.PackingContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -24,7 +22,7 @@ class FragilePolicyTest {
     @BeforeEach
     void setUp() {
         policy = new FragilePolicy();
-        context = new PackingContext(new Vehicle(UUID.randomUUID(), "V-1", new Dimensions(100, 100, 100), 1000));
+        context = new PackingContext(new Vehicle("WA12345", new Dimensions(100, 100, 100), 1000));
     }
 
     @Test
@@ -78,10 +76,10 @@ class FragilePolicyTest {
     }
 
     private Parcel standardParcel() {
-        return new Parcel("P-std", DIM_10x10x10, 5.0, false, Priority.STANDARD);
+        return new Parcel( DIM_10x10x10, 5.0, false, Priority.STANDARD);
     }
 
     private Parcel fragileParcel() {
-        return new Parcel("P-fr", DIM_10x10x10, 5.0, true, Priority.STANDARD);
+        return new Parcel(DIM_10x10x10, 5.0, true, Priority.STANDARD);
     }
 }

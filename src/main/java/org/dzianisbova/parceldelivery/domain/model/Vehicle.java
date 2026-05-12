@@ -1,9 +1,34 @@
 package org.dzianisbova.parceldelivery.domain.model;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
-public record Vehicle(UUID id, String plateNumber, Dimensions dimensions, double maxWeight) {
-    public Vehicle {
+@Getter
+public class Vehicle {
+    private final UUID id;
+    private final String plateNumber;
+    private final Dimensions dimensions;
+    private final double maxWeight;
+    private final VehicleStatus status;
+    private final double packedVolume;
+
+    public Vehicle(UUID id, String plateNumber, Dimensions dimensions,
+                   double maxWeight, VehicleStatus status, double packedVolume) {
+        this.id = id;
+        this.plateNumber = plateNumber;
+        this.dimensions = dimensions;
+        this.maxWeight = maxWeight;
+        this.status = status;
+        this.packedVolume = packedVolume;
+        verify();
+    }
+
+    public Vehicle(String plateNumber, Dimensions dimensions, double maxWeight) {
+        this(UUID.randomUUID(), plateNumber, dimensions, maxWeight, VehicleStatus.AVAILABLE, 0);
+    }
+
+    private void verify() {
         if (id == null) {
             throw new IllegalArgumentException("Vehicle id cannot be null");
         }

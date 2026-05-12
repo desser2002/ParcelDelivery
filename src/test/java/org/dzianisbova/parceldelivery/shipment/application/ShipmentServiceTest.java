@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,7 +41,7 @@ class ShipmentServiceTest {
     }
 
     private static Parcel anyParcel() {
-        return new Parcel("parcel-1", new Dimensions(10, 10, 10), 2.0, false, Priority.STANDARD);
+        return new Parcel(UUID.randomUUID(), new Dimensions(10, 10, 10), 2.0, false, Priority.STANDARD);
     }
 
     @Nested
