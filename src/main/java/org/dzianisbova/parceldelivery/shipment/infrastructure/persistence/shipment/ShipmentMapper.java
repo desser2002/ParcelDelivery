@@ -1,86 +1,40 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment;
 
-import org.dzianisbova.parceldelivery.domain.model.Dimensions;
-import org.dzianisbova.parceldelivery.domain.model.Parcel;
-import org.dzianisbova.parceldelivery.domain.model.Priority;
-import org.dzianisbova.parceldelivery.shipment.domain.model.Address;
 import org.dzianisbova.parceldelivery.shipment.domain.model.Shipment;
 import org.dzianisbova.parceldelivery.shipment.domain.model.ShipmentStatus;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 class ShipmentMapper {
-    public Shipment toDomain(ShipmentEntity entity) {
-        Address pickupAddress = new Address(
-                entity.getPickupStreet(),
-                entity.getPickupBuilding(),
-                entity.getPickupApartment(),
-                entity.getPickupCity(),
-                entity.getPickupPostalCode(),
-                entity.getPickupCountry()
-        );
-
-        Address deliveryAddress = new Address(
-                entity.getDeliveryStreet(),
-                entity.getDeliveryBuilding(),
-                entity.getDeliveryApartment(),
-                entity.getDeliveryCity(),
-                entity.getDeliveryPostalCode(),
-                entity.getDeliveryCountry()
-        );
-
-        Parcel parcel = new Parcel(
-                entity.getParcelId().toString(),
-                new Dimensions(entity.getLength(), entity.getWidth(), entity.getHeight()),
-                entity.getWeight(),
-                entity.isFragile(),
-                Priority.valueOf(entity.getPriority())
-        );
-
-        return  Shipment.create(
-                entity.getId(),
-                entity.getTrackingNumber(),
-                entity.getSenderId(),
-                pickupAddress,
-                entity.getRecipient(),
-                deliveryAddress,
-                parcel,
-                ShipmentStatus.valueOf(entity.getStatus()),
-                entity.getCreatedAt(),
-                entity.getVehicleId()
+    public Shipment toDomain(ShipmentEntity e) {
+        return Shipment.restore(
+            e.getId(),
+            e.getTrackingNumber(),
+            e.getSenderId(),
+            e.getPickup().toDomain(),
+            e.getRecipient(),
+            e.getDelivery().toDomain(),
+            e.getParcel().toDomain(),
+            ShipmentStatus.valueOf(e.getStatus()),
+            e.getCreatedAt(),
+            e.getVehicleId(),
+            e.getSortingCenterId()
         );
     }
 
-    public ShipmentEntity toEntity(Shipment shipment) {
+    public ShipmentEntity toEntity(Shipment s) {
         return new ShipmentEntity(
-                shipment.getId(),
-                shipment.getTrackingNumber(),
-                shipment.getSenderId(),
-                shipment.getPickupAddress().getStreet(),
-                shipment.getPickupAddress().getBuilding(),
-                shipment.getPickupAddress().getApartment(),
-                shipment.getPickupAddress().getCity(),
-                shipment.getPickupAddress().getPostalCode(),
-                shipment.getPickupAddress().getCountry(),
-                shipment.getRecipient(),
-                shipment.getDeliveryAddress().getStreet(),
-                shipment.getDeliveryAddress().getBuilding(),
-                shipment.getDeliveryAddress().getApartment(),
-                shipment.getDeliveryAddress().getCity(),
-                shipment.getDeliveryAddress().getPostalCode(),
-                shipment.getDeliveryAddress().getCountry(),
-                UUID.fromString(shipment.getParcel().getId()),
-                shipment.getParcel().getDimensions().length(),
-                shipment.getParcel().getDimensions().width(),
-                shipment.getParcel().getDimensions().height(),
-                shipment.getParcel().getWeight(),
-                shipment.getParcel().isFragile(),
-                shipment.getParcel().getPriority().name(),
-                shipment.getStatus().name(),
-                shipment.getCreatedAt(),
-                shipment.getVehicleId()
+            s.getId(),
+            s.getTrackingNumber(),
+            s.getSenderId(),
+            AddressEmbeddable.from(s.getPickupAddress()),
+            s.getRecipient(),
+            AddressEmbeddable.from(s.getDeliveryAddress()),
+            ParcelEmbeddable.from(s.getParcel()),
+            s.getStatus().name(),
+            s.getCreatedAt(),
+            s.getVehicleId(),
+            s.getSortingCenterId()
         );
     }
 }

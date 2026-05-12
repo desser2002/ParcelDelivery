@@ -1,9 +1,6 @@
 package org.dzianisbova.parceldelivery.shipment.infrastructure.persistence.shipment;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,65 +25,29 @@ public class ShipmentEntity {
     @Column(name = "sender_id")
     private UUID senderId;
 
-    @Column(name = "pickup_street", nullable = false)
-    private String pickupStreet;
-
-    @Column(name = "pickup_building", nullable = false)
-    private String pickupBuilding;
-
-    @Column(name = "pickup_apartment")
-    private String pickupApartment;
-
-    @Column(name = "pickup_city", nullable = false)
-    private String pickupCity;
-
-    @Column(name = "pickup_postal_code")
-    private String pickupPostalCode;
-
-    @Column(name = "pickup_country", nullable = false, length = 2)
-    private String pickupCountry;
+    @Embedded
+    @AttributeOverride(name = "street", column = @Column(name = "pickup_street", nullable = false))
+    @AttributeOverride(name = "building", column = @Column(name = "pickup_building", nullable = false))
+    @AttributeOverride(name = "apartment", column = @Column(name = "pickup_apartment"))
+    @AttributeOverride(name = "city", column = @Column(name = "pickup_city", nullable = false))
+    @AttributeOverride(name = "postalCode", column = @Column(name = "pickup_postal_code"))
+    @AttributeOverride(name = "country", column = @Column(name = "pickup_country", nullable = false, length = 2))
+    private AddressEmbeddable pickup;
 
     @Column(name = "recipient_name", nullable = false)
     private String recipient;
 
-    @Column(name = "delivery_street", nullable = false)
-    private String deliveryStreet;
+    @Embedded
+    @AttributeOverride(name = "street", column = @Column(name = "delivery_street", nullable = false))
+    @AttributeOverride(name = "building", column = @Column(name = "delivery_building", nullable = false))
+    @AttributeOverride(name = "apartment", column = @Column(name = "delivery_apartment"))
+    @AttributeOverride(name = "city", column = @Column(name = "delivery_city", nullable = false))
+    @AttributeOverride(name = "postalCode", column = @Column(name = "delivery_postal_code"))
+    @AttributeOverride(name = "country", column = @Column(name = "delivery_country", nullable = false, length = 2))
+    private AddressEmbeddable delivery;
 
-    @Column(name = "delivery_building", nullable = false)
-    private String deliveryBuilding;
-
-    @Column(name = "delivery_apartment")
-    private String deliveryApartment;
-
-    @Column(name = "delivery_city", nullable = false)
-    private String deliveryCity;
-
-    @Column(name = "delivery_postal_code")
-    private String deliveryPostalCode;
-
-    @Column(name = "delivery_country", nullable = false, length = 2)
-    private String deliveryCountry;
-
-    @Column(name = "parcel_id", nullable = false, updatable = false)
-    private UUID parcelId;
-
-    @Column(nullable = false)
-    private double length;
-
-    @Column(nullable = false)
-    private double width;
-
-    @Column(nullable = false)
-    private double height;
-
-    @Column(nullable = false)
-    private double weight;
-
-    @Column(nullable = false)
-    private boolean fragile;
-
-    @Column(nullable = false, length = 20)
-    private String priority;
+    @Embedded
+    private ParcelEmbeddable parcel;
 
     @Column(nullable = false, length = 20)
     private String status;
@@ -96,4 +57,7 @@ public class ShipmentEntity {
 
     @Column(name = "vehicle_id")
     private UUID vehicleId;
+
+    @Column(name = "sorting_center_id")
+    private UUID sortingCenterId;
 }
